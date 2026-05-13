@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Desenează • Draw v27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#080706;
+  --panel:#14110d;
+  --panel2:#1b1711;
+  --gold:#C8A97E;
+  --gold2:#E2C18A;
+  --text:#F0E6D3;
+  --muted:rgba(240,230,211,.48);
+  --line:rgba(200,169,126,.28);
+  --white:#f7f7f2;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{width:100%;min-height:100%;background:radial-gradient(circle at 50% 28%,#17110a 0%,#080706 52%,#030303 100%);font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);overflow-x:hidden}
+button{font:inherit;border:none;background:none;outline:none!important;cursor:pointer;color:inherit;user-select:none}
+button:focus,button:active,button:focus-visible{outline:none!important;box-shadow:none!important}
+.page{width:min(1180px,100%);margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.shell{border:1px solid rgba(200,169,126,.32);border-radius:16px;background:linear-gradient(180deg,rgba(20,17,13,.82),rgba(8,7,6,.92));box-shadow:0 24px 80px rgba(0,0,0,.48);padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.title{font-size:25px;line-height:1;font-weight:700;color:var(--gold2);letter-spacing:.01em}.subtitle{font-size:13px;color:var(--muted);margin-top:5px}.badge{display:flex;align-items:center;gap:9px;border:1px solid rgba(200,169,126,.45);color:var(--gold2);padding:9px 18px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(200,169,126,.08);letter-spacing:.04em}.badge:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--gold2);box-shadow:0 0 12px rgba(226,193,138,.8)}
+.editor{display:grid;grid-template-columns:240px minmax(390px,560px) 240px;gap:24px;align-items:center;justify-content:center}.side{height:560px;border:1px solid rgba(200,169,126,.34);border-radius:12px;background:linear-gradient(180deg,rgba(28,24,18,.94),rgba(14,12,9,.95));box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);padding:14px;display:flex;flex-direction:column;gap:12px}.side-top{display:none;height:44px;border:1px solid rgba(200,169,126,.35);border-radius:9px;background:linear-gradient(135deg,rgba(200,169,126,.10),rgba(255,255,255,.025));display:flex;align-items:center;justify-content:center;color:var(--gold2);font-weight:700;font-size:0;letter-spacing:.05em}.side-top i{font-size:22px;margin-right:0}.panel{border:1px solid rgba(200,169,126,.18);border-radius:10px;background:rgba(0,0,0,.16);padding:12px;display:flex;flex-direction:column;gap:10px}.panel.grow{flex:1}.section-title{display:none}.divider{display:none}.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}.tool-btn{height:64px;border-radius:9px;border:1px solid rgba(200,169,126,.27)!important;background:rgba(255,255,255,.025)!important;color:rgba(240,230,211,.74);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:9px;font-weight:800;text-transform:uppercase;transition:.15s}.tool-btn i{font-size:25px;color:rgba(247,247,242,.82);transition:.15s}.tool-btn:hover{border-color:rgba(226,193,138,.55)!important;background:rgba(200,169,126,.08)!important;color:var(--gold2)}.tool-btn.active{border-color:rgba(226,193,138,.9)!important;background:rgba(200,169,126,.16)!important;color:var(--gold2);box-shadow:0 0 0 1px rgba(226,193,138,.16),0 0 22px rgba(200,169,126,.09)}.tool-btn.active i{color:var(--gold2)}.action-stack{display:flex;flex-direction:column;gap:7px;margin-top:auto}.wide-btn{height:64px;border:1px solid rgba(200,169,126,.27)!important;border-radius:9px;background:rgba(255,255,255,.025)!important;color:rgba(240,230,211,.74);font-size:10px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:.15s}.wide-btn:hover{background:rgba(200,169,126,.10)!important;color:var(--gold2)}.wide-btn.danger{color:rgba(255,178,178,.82)}.wide-btn.danger:hover{border-color:rgba(255,140,140,.45)!important;color:#ffd1d1}.wide-btn i{font-size:25px;color:rgba(247,247,242,.82)}
+.center{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}.canvas-stage{position:relative;width:560px;height:560px;display:flex;align-items:center;justify-content:center}.canvas-stage:before{content:"";position:absolute;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,126,.08),transparent 62%);filter:blur(3px)}canvas#draw-canvas{width:540px;height:540px;border-radius:50%;display:block;position:relative;z-index:1;box-shadow:0 0 38px rgba(200,169,126,.14),0 0 0 1px rgba(200,169,126,.06)}.status-wrap{height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}.status{font-size:13px;min-height:18px;text-align:center;color:var(--gold2);font-weight:700;letter-spacing:.12em;text-transform:uppercase}.erase-hint{font-size:12px;color:rgba(240,230,211,.75);padding:9px 14px;background:rgba(200,169,126,.06);border-radius:9px;border:1px solid rgba(200,169,126,.18);display:none;text-align:center}.erase-hint.show{display:block}.bottom-btns{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:16px;width:min(760px,100%)}.btn{height:60px;border-radius:11px;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;letter-spacing:.04em;transition:.15s}.btn i{font-size:23px}.btn:disabled{opacity:.32;cursor:not-allowed}.btn-preview,.btn-save{background:rgba(0,0,0,.14);border:1px solid rgba(226,193,138,.55)!important;color:var(--gold2)}.btn-send{background:linear-gradient(180deg,#E5C48D,#C8A97E);color:#0b0906;box-shadow:0 10px 26px rgba(200,169,126,.18)}.btn:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.08)}
+.pv-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}.pv-overlay.show{display:flex}.modal{width:min(840px,100%);border:1px solid rgba(200,169,126,.38);border-radius:18px;background:linear-gradient(180deg,#17130e,#0b0a08);padding:22px;display:grid;grid-template-columns:260px 1fr;gap:24px;box-shadow:0 30px 90px rgba(0,0,0,.6)}.modal-head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start}.modal-title{font-size:18px;font-weight:700}.modal-sub{font-size:12px;color:var(--muted);margin-top:4px;font-family:monospace}.close-btn{width:40px;height:40px;border-radius:9px;border:1px solid rgba(200,169,126,.25)!important;color:rgba(240,230,211,.7);font-size:22px}.preview-box{border:1px solid rgba(200,169,126,.22);border-radius:10px;overflow:hidden;align-self:start}#pv-canvas{display:block;width:100%;height:auto}.modal-main{display:flex;flex-direction:column;justify-content:center;gap:18px}.prog-label{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}.prog-bar{height:12px;background:rgba(200,169,126,.10);border:1px solid rgba(200,169,126,.28);border-radius:999px;padding:2px;overflow:hidden}.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,#B99866,#E5C48D);border-radius:999px;transition:width .1s}.speed-box{border:1px solid rgba(200,169,126,.22);border-radius:10px;padding:12px;background:rgba(200,169,126,.05);display:flex;flex-direction:column;gap:9px}.speed-row{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:700}.speed-row b{color:var(--gold2)}.speed-slider{width:100%;accent-color:#E2C18A}.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-btn,.btn-modal-send{height:58px;border-radius:10px;font-weight:800;text-transform:uppercase}.modal-btn{border:1px solid rgba(200,169,126,.30)!important;background:rgba(200,169,126,.07)!important;color:var(--gold2)}.btn-modal-send{background:linear-gradient(180deg,#E5C48D,#C8A97E)!important;color:#0b0906}
+@media(max-width:1050px){.editor{grid-template-columns:1fr;gap:14px}.side{width:min(540px,100%);height:auto;margin:0 auto}.side.left{order:2}.center{order:1}.side.right{order:3}.canvas-stage{width:min(560px,100vw - 36px);height:auto}canvas#draw-canvas{width:min(540px,100vw - 42px);height:min(540px,100vw - 42px)}.bottom-btns{grid-template-columns:1fr}.modal{grid-template-columns:1fr;max-width:430px}.modal-head{grid-column:auto}}
+@media(max-width:520px){.page{padding:10px}.shell{padding:12px}.header{align-items:flex-start;gap:10px}.title{font-size:21px}.badge{padding:7px 11px;font-size:10px}.tool-btn{height:78px}.side-top{height:52px}.bottom-btns{gap:10px}.btn{height:54px}.modal{padding:16px}}
+
+.left-grid-panel{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+.left-grid-panel .tool-grid{display:contents}
+.action-tool{width:100%}
+.tool-btn.danger{color:rgba(255,185,185,.86);border-color:rgba(255,130,130,.34)!important;background:rgba(120,20,10,.10)!important}
+.tool-btn.danger i{color:rgba(255,220,220,.9)}
+.tool-btn.danger:hover{border-color:rgba(255,155,155,.55)!important;background:rgba(140,28,14,.18)!important;color:#ffd4d4}
+
+
+.file-tools{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:50;
+  display:flex;
+  gap:8px;
+  padding:8px;
+  border:1px solid rgba(200,169,126,.18);
+  border-radius:14px;
+  background:rgba(18,14,10,.78);
+  backdrop-filter:blur(8px);
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.file-btn{
+  min-width:76px;
+  height:34px;
+  border-radius:10px!important;
+  border:1px solid rgba(200,169,126,.28)!important;
+  background:rgba(200,169,126,.08)!important;
+  color:#e8d7b5;
+  font-family:inherit;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  cursor:pointer;
+}
+.file-btn:hover{background:rgba(200,169,126,.16)!important;color:#fff}
+.preview-range-wrap{width:100%;display:flex;align-items:center;gap:8px}
+.preview-range-wrap span{font-size:10px;color:rgba(240,230,211,.45);min-width:34px;text-align:center}
+#pv-seek{
+  width:100%;
+  accent-color:#C8A97E;
+}
+
+
+.seek-bar-wrap{
+  width:100%;
+  height:18px;
+  display:flex;
+  align-items:center;
+}
+.seek-bar{
+  width:100%;
+  height:4px;
+  appearance:none;
+  -webkit-appearance:none;
+  border-radius:999px;
+  outline:none;
+  background:linear-gradient(90deg,#C8A97E 0%,#C8A97E var(--progress,0%),rgba(200,169,126,.13) var(--progress,0%),rgba(200,169,126,.13) 100%);
+  cursor:pointer;
+}
+.seek-bar::-webkit-slider-thumb{
+  appearance:none;
+  -webkit-appearance:none;
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#F0E6D3;
+  border:2px solid #C8A97E;
+  box-shadow:0 0 12px rgba(200,169,126,.55);
+}
+.seek-bar::-moz-range-thumb{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#F0E6D3;
+  border:2px solid #C8A97E;
+  box-shadow:0 0 12px rgba(200,169,126,.55);
+}
+
+</style>
+</head>
+<body>
+<div class="pv-overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Previzualizare masă nisip</div><div class="modal-sub" id="pts-count">0 puncte θ-ρ</div></div>
+      <button class="close-btn" onclick="closePreview()">×</button>
+    </div>
+    <div class="preview-box"><canvas id="pv-canvas" width="340" height="340"></canvas></div>
+    <div class="modal-main">
+      <div><div class="prog-label"><span>Conversie puncte θ-ρ...</span><span id="prog-num">0%</span></div><div class="seek-bar-wrap">
+      <input id="pv-seek" class="seek-bar" type="range" min="0" max="1000" value="0" oninput="seekPreview(this.value)">
+    </div></div>
+      <div class="speed-box"><div class="speed-row"><span>Viteză</span><b id="speed-label">100%</b></div><input class="speed-slider" id="speed-slider" type="range" min="10" max="100" value="100" oninput="setPreviewSpeed(this.value)"></div><div class="modal-btns"><button class="modal-btn" id="pause-btn" onclick="togglePause()">⏸ Pauză</button><button class="modal-btn" onclick="restartPv()">↺ Restart</button></div>
+      <button class="btn-modal-send" onclick="setStatus('Gata de desen','#86efac');closePreview()"><i class="ti ti-send"></i> Trimite</button>
+    </div>
+  </div>
+</div>
+
+<div class="file-tools">
+  <input type="file" id="load-json-input" accept=".json,application/json" style="display:none" onchange="loadDrawingFromFile(event)">
+  <button class="file-btn" onclick="saveDrawingToFile()" title="Salvează desen"><i class="ti ti-device-floppy"></i>Salvează</button>
+  <button class="file-btn" onclick="document.getElementById('load-json-input').click()" title="Încarcă desen"><i class="ti ti-upload"></i>Încarcă</button>
+</div>
+
+<div class="page">
+  <div class="shell">
+    <div class="header">
+      <div><div class="title">ZeNis • Draw</div><div class="subtitle">Trasează o formă pe nisip</div></div>
+      <div class="badge" id="shapes-badge">0 forme</div>
+    </div>
+    <div class="editor">
+      <aside class="side left">
+        <div class="panel grow left-grid-panel">
+          <div class="tool-grid" id="tools-left"></div>
+          <button class="tool-btn action-tool" onclick="centerShapes()" type="button"><i class="ti ti-target-arrow"></i><span>Centru</span></button>
+          <button class="tool-btn action-tool" onclick="undoShape()" type="button"><i class="ti ti-arrow-back-up"></i><span>Undo</span></button>
+          <button class="tool-btn action-tool danger" onclick="clearAll()" type="button"><i class="ti ti-trash"></i><span>Curăță</span></button>
+        </div>
+      </aside>
+      <main class="center">
+        <div class="canvas-stage"><canvas id="draw-canvas" width="540" height="540"></canvas></div>
+        <div class="status-wrap"><div class="status" id="status-msg">Gata de desen</div><div class="erase-hint" id="erase-hint">Click pe o formă pentru a o șterge</div></div>
+        <div class="bottom-btns">
+          <button class="btn btn-preview" id="btn-preview" onclick="openPreview()" disabled><i class="ti ti-eye"></i>Previzualizează</button>
+          <button class="btn btn-send" id="btn-send" onclick="setStatus('Trimis la masă!','#86efac')" disabled><i class="ti ti-send"></i>Trimite</button>
+          
+    <button class="btn btn-save" id="btn-save" onclick="setStatus('Salvat în librărie!','#86efac')" disabled><i class="ti ti-download"></i>Salvează</button>
+        </div>
+      </main>
+      <aside class="side right">
+        <button class="side-top" onclick="toggleGuides()"><i class="ti ti-focus-centered"></i> GHIDURI</button>
+        <div class="panel grow"><div class="section-title">FORME</div><div class="divider"></div><div class="tool-grid" id="tools-right"></div></div>
+        <div class="action-stack"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+<script>
+const SAND="#C8A97E", LINE="#F8F8F2", FAINT="rgba(200,169,126,.26)";
+const dc=document.getElementById("draw-canvas"),CTX=dc.getContext("2d");
+const S=540,CX=S/2,CY=S/2,R=S/2-18,SW=3;
+let tool="pen",shapes=[],drawing=false,startPt={x:0,y:0},penPts=[];
+let moveShape=null,moveOff={x:0,y:0},rotateShape=null,rotateCenter={x:0,y:0},rotateStart=0,rotateBase=0,rotateBasePoints=null,resizeShape=null,resizeCenter={x:0,y:0},resizeStartDist=1,resizeBase=null,nextId=1,showGuides=true;
+const LEFT_TOOLS=[
+  {id:"trajectory",icon:"ti-route",label:"Traiect"},
+  {id:"erase",icon:"ti-eraser",label:"Șterge"},
+  {id:"move",icon:"ti-hand-move",label:"Mută"},
+  {id:"rotate",icon:"ti-rotate-clockwise",label:"Rotire"},
+  {id:"resize",icon:"ti-arrows-maximize",label:"Resize"}
+];
+const RIGHT_TOOLS=[
+  {id:"pen",icon:"ti-pencil",label:"Desen"},
+  {id:"line",icon:"ti-slash",label:"Linie"},
+  {id:"ellipse",icon:"ti-oval",label:"Elipsă"},
+  {id:"circle",icon:"ti-circle",label:"Cerc"},
+  {id:"rect",icon:"ti-rectangle",label:"Drept"},
+  {id:"semicircle",icon:"ti-circle-half-2",label:"Semicerc"},
+  {id:"triangle",icon:"ti-triangle",label:"Triunghi"},
+  {id:"heart",icon:"ti-heart",label:"Inimă"},
+  {id:"star",icon:"ti-star",label:"Stea"},
+  {id:"spiral",icon:"ti-spiral",label:"Spirală"},
+  {id:"copy",icon:"ti-copy",label:"Copy"}
+];
+function makeTool(t,container){const b=document.createElement("button");b.className="tool-btn"+(t.id===tool?" active":"");b.id="tool-"+t.id;b.innerHTML=`<i class="ti ${t.icon}" aria-hidden="true"></i><span>${t.label}</span>`;b.onclick=()=>setTool(t.id);container.appendChild(b)}
+LEFT_TOOLS.forEach(t=>makeTool(t,document.getElementById("tools-left")));RIGHT_TOOLS.forEach(t=>makeTool(t,document.getElementById("tools-right")));
+function setTool(id){tool=id;document.querySelectorAll(".tool-btn").forEach(x=>x.classList.remove("active"));const b=document.getElementById("tool-"+id);if(b)b.classList.add("active");dc.style.cursor=id==="move"?"grab":id==="rotate"?"alias":id==="resize"?"nwse-resize":id==="erase"?"not-allowed":id==="copy"?"copy":"crosshair";document.getElementById("erase-hint").classList.toggle("show",id==="erase"); if(id==="rotate")setStatus("Alege o formă și trage ca să o rotești"); if(id==="trajectory")setStatus("Desenează traiectoria dintre forme"); if(id==="circle")setStatus("Cerc: apasă în centru și trage raza"); if(id==="ellipse")setStatus("Elipsă: trage diagonala formei"); if(id==="copy")setStatus("Copy: click pe o formă ca să o duplici"); if(id==="resize")setStatus("Resize: click pe formă și trage spre exterior/interior") }
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function setStatus(msg,color){const el=document.getElementById("status-msg");el.textContent=msg;el.style.color=color||"#E2C18A"}
+function updateUI(){document.getElementById("shapes-badge").textContent=shapes.length+" forme";const has=shapes.length>0;["btn-preview","btn-send","btn-save"].forEach(id=>document.getElementById(id).disabled=!has);redraw()}
+function undoShape(){if(shapes.length){shapes.pop();setStatus("Anulat");updateUI()}}
+function clearAll(){shapes=[];setStatus("Canvas curățat");updateUI()}
+function centerShapes(){if(!shapes.length)return;let pts=[];shapes.forEach(s=>pts.push(...shapeToPoints(s)));if(!pts.length)return;const mx=pts.reduce((a,p)=>a+p.x,0)/pts.length,my=pts.reduce((a,p)=>a+p.y,0)/pts.length;moveAll(CX-mx,CY-my);setStatus("Forme centrate");updateUI()}
+function moveAll(dx,dy){shapes.forEach(s=>{if(s.x0!=null){s.x0+=dx;s.y0+=dy}if(s.x1!=null){s.x1+=dx;s.y1+=dy}if(s.points)s.points=s.points.map(p=>({x:p.x+dx,y:p.y+dy}))})}
+function toggleGuides(){showGuides=!showGuides;redraw()}
+function cloneShape(s){const c=JSON.parse(JSON.stringify(s));c.id=nextId++; if(c.x0!=null){c.x0+=18;c.y0+=18} if(c.x1!=null){c.x1+=18;c.y1+=18} if(c.points)c.points=c.points.map(p=>({x:p.x+18,y:p.y+18})); return c}
+function drawGrid(ctx,sz,r){const cx=sz/2,cy=sz/2;ctx.clearRect(0,0,sz,sz);ctx.beginPath();ctx.arc(cx,cy,r+10,0,Math.PI*2);ctx.fillStyle="#090806";ctx.fill();ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();ctx.fillStyle="#0c0b09";ctx.fillRect(0,0,sz,sz);if(showGuides){ctx.fillStyle="rgba(200,169,126,.16)";for(let x=cx-r;x<=cx+r;x+=18){for(let y=cy-r;y<=cy+r;y+=18){if(Math.hypot(x-cx,y-cy)<r-7){ctx.fillRect(x,y,1.15,1.15)}}}[.25,.5,.75].forEach(f=>{ctx.beginPath();ctx.arc(cx,cy,r*f,0,Math.PI*2);ctx.strokeStyle="rgba(200,169,126,.24)";ctx.lineWidth=1.2;ctx.stroke()});for(let i=0;i<12;i++){const a=i*Math.PI*2/12;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle="rgba(200,169,126,.10)";ctx.lineWidth=1;ctx.stroke()}ctx.beginPath();ctx.moveTo(cx-r,cy);ctx.lineTo(cx+r,cy);ctx.moveTo(cx,cy-r);ctx.lineTo(cx,cy+r);ctx.strokeStyle="rgba(200,169,126,.18)";ctx.lineWidth=1;ctx.stroke()}ctx.restore();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle="#C8A97E";ctx.lineWidth=3;ctx.shadowColor="rgba(200,169,126,.5)";ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle="#E2C18A";ctx.fill();ctx.beginPath();ctx.arc(cx,cy-r,6,0,Math.PI*2);ctx.fillStyle="#E2C18A";ctx.fill()}
+function drawShape(ctx,s,preview){
+  ctx.beginPath();ctx.strokeStyle=preview?"rgba(248,248,242,.45)":LINE;ctx.lineWidth=preview?2:SW;ctx.lineCap="round";ctx.lineJoin="round";ctx.shadowColor=preview?"transparent":"rgba(255,255,255,.36)";ctx.shadowBlur=preview?0:7;
+  if((s.type==="pen"||s.type==="trajectory")&&s.points){
+    if(s.type==="trajectory")ctx.setLineDash([10,8]);
+    s.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
+    if(s.type==="trajectory"&&!preview){ctx.shadowBlur=0;ctx.fillStyle=LINE;(s.points||[]).filter((_,i)=>i%18===0||i===s.points.length-1).forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4.2,0,Math.PI*2);ctx.fill()})}
+  }else{
+    const pts=shapeToPoints(s);
+    if(pts.length){pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+      if(["circle","ellipse","rect","triangle","heart","star"].includes(s.type))ctx.closePath();
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);ctx.shadowBlur=0
+}
+function redraw(extra){drawGrid(CTX,S,R);CTX.save();CTX.beginPath();CTX.arc(CX,CY,R,0,Math.PI*2);CTX.clip();shapes.forEach(s=>drawShape(CTX,s,false));if(extra)drawShape(CTX,extra,true);CTX.restore()}
+function getPos(e){const r=dc.getBoundingClientRect(),src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(dc.width/r.width),y:(src.clientY-r.top)*(dc.height/r.height)}}
+function hitTest(p,s){const T=18;if(s.type==="line"){return nearSegment(p,{x:s.x0,y:s.y0},{x:s.x1,y:s.y1},T)}if(s.type==="rect"){const x0=Math.min(s.x0,s.x1),y0=Math.min(s.y0,s.y1),x1=Math.max(s.x0,s.x1),y1=Math.max(s.y0,s.y1);return p.x>x0-T&&p.x<x1+T&&p.y>y0-T&&p.y<y1+T&&(Math.abs(p.y-y0)<T||Math.abs(p.y-y1)<T||Math.abs(p.x-x0)<T||Math.abs(p.x-x1)<T)}if(["circle","ellipse","semicircle","triangle","heart","star","spiral"].includes(s.type)){return shapeToPoints(s).some(pt=>dist(p,pt)<T)}if((s.type==="pen"||s.type==="trajectory")&&s.points)return s.points.some(pt=>dist(p,pt)<T);return false}
+function nearSegment(p,a,b,T){const dx=b.x-a.x,dy=b.y-a.y,len=dx*dx+dy*dy;if(len<1)return false;const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/len));return dist(p,{x:a.x+t*dx,y:a.y+t*dy})<T}
+function getShapeCenter(s){
+  const pts=s.points?s.points:shapeToPoints(s);if(!pts||!pts.length)return{x:CX,y:CY};
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);return{x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2}
+}
+function rotatePoint(p,c,a){const x=p.x-c.x,y=p.y-c.y,ca=Math.cos(a),sa=Math.sin(a);return{x:c.x+x*ca-y*sa,y:c.y+x*sa+y*ca}}
+function scalePoint(p,c,k){return{x:c.x+(p.x-c.x)*k,y:c.y+(p.y-c.y)*k}}
+function snapshotShape(s){return JSON.parse(JSON.stringify(s))}
+function applyScaleFromBase(target,base,c,k){if(base.x0!=null){target.x0=c.x+(base.x0-c.x)*k;target.y0=c.y+(base.y0-c.y)*k}if(base.x1!=null){target.x1=c.x+(base.x1-c.x)*k;target.y1=c.y+(base.y1-c.y)*k}if(base.points)target.points=base.points.map(pt=>scalePoint(pt,c,k))}
+function applyRotation(s,pts){if(!s.rot)return pts;const c=(s.type==="circle"||s.type==="star")?{x:s.x0,y:s.y0}:{x:(s.x0+s.x1)/2,y:(s.y0+s.y1)/2};return pts.map(p=>rotatePoint(p,c,s.rot))}
+function reversePts(pts){return [...pts].reverse()}
+function down(p){
+  if(dist(p,{x:CX,y:CY})>R+8)return;
+  if(tool==="erase"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){shapes=shapes.filter(s=>s.id!==hit.id);setStatus("Formă ștearsă");updateUI()}return}
+  if(tool==="copy"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){shapes.push(cloneShape(hit));setStatus("Formă copiată");updateUI()}return}
+  if(tool==="move"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){moveShape=hit;moveOff=p;dc.style.cursor="grabbing"}return}
+  if(tool==="resize"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){resizeShape=hit;resizeCenter=getShapeCenter(hit);resizeStartDist=Math.max(6,dist(p,resizeCenter));resizeBase=snapshotShape(hit);dc.style.cursor="nwse-resize";setStatus("Redimensionează forma");redraw()}return}
+  if(tool==="rotate"){
+    const hit=[...shapes].reverse().find(s=>s.type!=="trajectory"&&hitTest(p,s));
+    if(hit){rotateShape=hit;rotateCenter=getShapeCenter(hit);rotateStart=Math.atan2(p.y-rotateCenter.y,p.x-rotateCenter.x);rotateBase=hit.rot||0;rotateBasePoints=hit.points?hit.points.map(pt=>({...pt})):null;dc.style.cursor="grabbing";setStatus("Rotește forma");redraw()}
+    return
+  }
+  drawing=true;startPt=p;penPts=[p]
+}
+function move(p){
+  if(rotateShape){const a=Math.atan2(p.y-rotateCenter.y,p.x-rotateCenter.x)-rotateStart;if(rotateBasePoints){rotateShape.points=rotateBasePoints.map(pt=>rotatePoint(pt,rotateCenter,a))}else rotateShape.rot=rotateBase+a;redraw();return}
+  if(resizeShape){const k=Math.max(.12,Math.min(5,dist(p,resizeCenter)/resizeStartDist));applyScaleFromBase(resizeShape,resizeBase,resizeCenter,k);redraw();return}
+  if(moveShape){const dx=p.x-moveOff.x,dy=p.y-moveOff.y;moveOff=p;if(moveShape.x0!=null){moveShape.x0+=dx;moveShape.y0+=dy}if(moveShape.x1!=null){moveShape.x1+=dx;moveShape.y1+=dy}if(moveShape.points)moveShape.points=moveShape.points.map(pt=>({x:pt.x+dx,y:pt.y+dy}));redraw();return}
+  if(!drawing)return;if(tool==="pen"||tool==="trajectory"){if(dist(p,penPts[penPts.length-1])>2)penPts.push(p);redraw({type:tool,points:[...penPts],id:-1})}else redraw({type:tool,x0:startPt.x,y0:startPt.y,x1:p.x,y1:p.y,id:-1})
+}
+function up(p){
+  dc.style.cursor=tool==="move"?"grab":tool==="rotate"?"alias":tool==="resize"?"nwse-resize":tool==="erase"?"not-allowed":"crosshair";
+  if(rotateShape){rotateShape=null;rotateBasePoints=null;setStatus("Rotit");updateUI();return}
+  if(resizeShape){resizeShape=null;resizeBase=null;setStatus("Redimensionat");updateUI();return}
+  if(moveShape){moveShape=null;updateUI();return}
+  if(!drawing)return;drawing=false;let ns=null;if((tool==="pen"||tool==="trajectory")&&penPts.length>3)ns={type:tool,points:[...penPts],id:nextId++};else if(!["pen","trajectory","erase","move","rotate","resize","copy"].includes(tool)&&dist(startPt,p)>8)ns={type:tool,x0:startPt.x,y0:startPt.y,x1:p.x,y1:p.y,rot:0,id:nextId++};if(ns){shapes.push(ns);setStatus(tool==="trajectory"?"Traiectorie adăugată":"Gata de desen");updateUI()}else redraw()
+}
+dc.addEventListener("mousedown",e=>down(getPos(e)));dc.addEventListener("mousemove",e=>move(getPos(e)));dc.addEventListener("mouseup",e=>up(getPos(e)));dc.addEventListener("mouseleave",()=>{if(rotateShape){rotateShape=null;rotateBasePoints=null;updateUI()}if(resizeShape){resizeShape=null;resizeBase=null;updateUI()}if(moveShape){moveShape=null;updateUI()}if(drawing&&(tool==="pen"||tool==="trajectory")&&penPts.length>3){shapes.push({type:tool,points:[...penPts],id:nextId++});updateUI()}drawing=false});dc.addEventListener("touchstart",e=>{e.preventDefault();down(getPos(e))},{passive:false});dc.addEventListener("touchmove",e=>{e.preventDefault();move(getPos(e))},{passive:false});dc.addEventListener("touchend",e=>{e.preventDefault();if(e.changedTouches&&e.changedTouches[0])up(getPos({touches:[e.changedTouches[0]]}))},{passive:false});
+const PVC=document.getElementById("pv-canvas"),PVCTX=PVC.getContext("2d"),PS=340,PCX=PS/2,PCY=PS/2,PR=PS/2-18;let pvPairs=[],pvProg=0,pvPaused=false,pvAnim=null,pvSpeed=1;
+function sampleLine(x0,y0,x1,y1,n=72){return Array.from({length:n},(_,i)=>({x:x0+(x1-x0)*(i/(n-1)),y:y0+(y1-y0)*(i/(n-1))}))}
+function sampleArc(cx,cy,rx,ry,a0,a1,n=96){return Array.from({length:n},(_,i)=>{const a=a0+(a1-a0)*(i/(n-1));return{x:cx+rx*Math.cos(a),y:cy+ry*Math.sin(a)}})}
+function bbox(s){return{x0:Math.min(s.x0,s.x1),y0:Math.min(s.y0,s.y1),x1:Math.max(s.x0,s.x1),y1:Math.max(s.y0,s.y1),cx:(s.x0+s.x1)/2,cy:(s.y0+s.y1)/2,w:Math.abs(s.x1-s.x0),h:Math.abs(s.y1-s.y0)}}
+function shapeToPoints(s){
+  if(s.type==="pen"||s.type==="trajectory")return(s.points||[]).filter((_,i)=>i%2===0);
+  if(s.type==="line")return applyRotation(s,sampleLine(s.x0,s.y0,s.x1,s.y1));
+  if(s.type==="ellipse"){const rx=Math.abs(s.x1-s.x0)/2,ry=Math.abs(s.y1-s.y0)/2;return applyRotation(s,sampleArc((s.x0+s.x1)/2,(s.y0+s.y1)/2,rx,ry,0,Math.PI*2))}
+  if(s.type==="circle"){const rr=dist({x:s.x0,y:s.y0},{x:s.x1,y:s.y1});return sampleArc(s.x0,s.y0,rr,rr,0,Math.PI*2)}
+  if(s.type==="semicircle"){const cx2=(s.x0+s.x1)/2,cy2=(s.y0+s.y1)/2,rx=Math.abs(s.x1-s.x0)/2,ry=Math.abs(s.y1-s.y0)/2;return applyRotation(s,sampleArc(cx2,cy2,rx,ry,Math.PI,0))}
+  if(s.type==="rect"){const x0=Math.min(s.x0,s.x1),y0=Math.min(s.y0,s.y1),x1=Math.max(s.x0,s.x1),y1=Math.max(s.y0,s.y1);return applyRotation(s,[...sampleLine(x0,y0,x1,y0),...sampleLine(x1,y0,x1,y1),...sampleLine(x1,y1,x0,y1),...sampleLine(x0,y1,x0,y0)])}
+  if(s.type==="triangle"){const tx=(s.x0+s.x1)/2;return applyRotation(s,[...sampleLine(tx,s.y0,s.x1,s.y1),...sampleLine(s.x1,s.y1,s.x0,s.y1),...sampleLine(s.x0,s.y1,tx,s.y0)])}
+  if(s.type==="star"){
+    const cx=s.x0,cy=s.y0,rad=dist({x:s.x0,y:s.y0},{x:s.x1,y:s.y1});
+    const v=[];
+    for(let i=0;i<10;i++){
+      const a=-Math.PI/2+i*Math.PI/5;
+      const r=i%2?rad*.43:rad;
+      v.push({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)});
+    }
+    const pts=[];
+    for(let i=0;i<10;i++){
+      const a=v[i],b=v[(i+1)%10];
+      pts.push(...sampleLine(a.x,a.y,b.x,b.y,32));
+    }
+    return applyRotation(s,pts)
+  }
+  if(s.type==="heart"){const b=bbox(s),pts=[];for(let i=0;i<130;i++){const t=Math.PI*2*i/129;const x=16*Math.pow(Math.sin(t),3);const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));pts.push({x:b.cx+(x/34)*b.w,y:b.cy+(y/34)*b.h})}return applyRotation(s,pts)}
+  if(s.type==="spiral"){const b=bbox(s),cx=b.cx,cy=b.cy,maxr=Math.min(b.w,b.h)/2,pts=[];const turns=3.2;for(let i=0;i<180;i++){const k=i/179,a=k*Math.PI*2*turns,r=maxr*k;pts.push({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)})}return applyRotation(s,pts)}
+  return[]
+}
+function isClosedShape(s){
+  return ["circle","ellipse","rect","triangle","heart","star"].includes(s.type)
+}
+function nearestIndex(pts,target){
+  let bi=0,bd=Infinity;
+  pts.forEach((p,i)=>{const d=dist(p,target);if(d<bd){bd=d;bi=i}});
+  return bi
+}
+function polyLen(pts){
+  let l=0;
+  for(let i=1;i<pts.length;i++)l+=dist(pts[i-1],pts[i]);
+  return l
+}
+function addPts(dst,pts){
+  if(!pts||!pts.length)return;
+  if(dst.length&&pts.length&&dist(dst[dst.length-1],pts[0])<3)dst.push(...pts.slice(1));
+  else dst.push(...pts)
+}
+function reversePts(pts){return [...pts].reverse()}
+function clampIndex(i,pts){return Math.max(0,Math.min(pts.length-1,i))}
+function segmentOpen(pts,a,b){
+  a=clampIndex(a,pts);b=clampIndex(b,pts);
+  if(a===b)return [pts[a]];
+  if(a<b)return pts.slice(a,b+1);
+  return pts.slice(b,a+1).reverse()
+}
+function segmentClosed(pts,a,b){
+  a=clampIndex(a,pts);b=clampIndex(b,pts);
+  if(a===b)return [pts[a]];
+  const f = a<=b ? pts.slice(a,b+1) : [...pts.slice(a),...pts.slice(0,b+1)];
+  const r = a>=b ? pts.slice(b,a+1).reverse() : [...pts.slice(0,a+1).reverse(),...pts.slice(b).reverse()];
+  return polyLen(f)<=polyLen(r)?f:r
+}
+function segmentOnShapeByIdx(s,a,b){
+  const pts=shapeToPoints(s);
+  if(!pts.length)return [];
+  return isClosedShape(s)?segmentClosed(pts,a,b):segmentOpen(pts,a,b)
+}
+function fullContourFromIdx(s,idx){
+  const pts=shapeToPoints(s);
+  if(!pts.length)return [];
+  idx=clampIndex(idx,pts);
+
+  if(isClosedShape(s)){
+    return [...pts.slice(idx),...pts.slice(0,idx+1)]
+  }
+
+  // Pentru forme deschise: mergem strict pe contur, dus-întors,
+  // fără să închidem forma cu o diagonală.
+  const toStart=pts.slice(0,idx+1).reverse();
+  const startToEnd=pts.slice(1);
+  const backToEntry=pts.slice(idx,pts.length-1).reverse();
+  return [...toStart,...startToEnd,...backToEntry]
+}
+function closestPointOnShapeIndex(s,target){
+  const pts=shapeToPoints(s);
+  if(!pts.length)return null;
+  const idx=nearestIndex(pts,target);
+  return {idx,pt:pts[idx],d:dist(pts[idx],target)}
+}
+function closestBetweenShapes(a,b){
+  const ap=shapeToPoints(a),bp=shapeToPoints(b);
+  if(!ap.length||!bp.length)return null;
+  let best={ai:0,bi:0,d:Infinity};
+  for(let i=0;i<ap.length;i++){
+    for(let j=0;j<bp.length;j++){
+      const d=dist(ap[i],bp[j]);
+      if(d<best.d)best={ai:i,bi:j,d};
+    }
+  }
+  return best
+}
+
+// Detectare mai stabilă pentru linii care ating latura unui dreptunghi/pătrat:
+// punctele sampled pot să nu cadă exact pe muchie, deci folosim toleranță pe segment.
+function lineLike(s){
+  return s.type==="line" || s.type==="trajectory" || (s.type==="pen" && s.points && s.points.length>1)
+}
+function pointSegDist(p,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y;
+  const l2=dx*dx+dy*dy;
+  if(l2<0.001)return dist(p,a);
+  let t=((p.x-a.x)*dx+(p.y-a.y)*dy)/l2;
+  t=Math.max(0,Math.min(1,t));
+  return dist(p,{x:a.x+t*dx,y:a.y+t*dy})
+}
+function shapeSegments(s){
+  const pts=shapeToPoints(s);
+  const segs=[];
+  if(pts.length<2)return segs;
+  for(let i=0;i<pts.length-1;i++)segs.push([pts[i],pts[i+1],i,i+1]);
+  if(isClosedShape(s))segs.push([pts[pts.length-1],pts[0],pts.length-1,0]);
+  return segs;
+}
+function robustClosestBetweenShapes(a,b){
+  let best=closestBetweenShapes(a,b);
+  const as=shapeSegments(a),bs=shapeSegments(b);
+
+  // punct de pe A aproape de segment B
+  const ap=shapeToPoints(a),bp=shapeToPoints(b);
+  for(let i=0;i<ap.length;i++){
+    for(const [b0,b1,bi0] of bs){
+      const d=pointSegDist(ap[i],b0,b1);
+      if(!best||d<best.d)best={ai:i,bi:bi0,d};
+    }
+  }
+  // punct de pe B aproape de segment A
+  for(let j=0;j<bp.length;j++){
+    for(const [a0,a1,ai0] of as){
+      const d=pointSegDist(bp[j],a0,a1);
+      if(!best||d<best.d)best={ai:ai0,bi:j,d};
+    }
+  }
+  return best;
+}
+function buildTouchGraph(){
+  const nodes=shapes.map(()=>[]);
+  const TOUCH=24;
+
+  for(let i=0;i<shapes.length;i++){
+    for(let j=i+1;j<shapes.length;j++){
+      const hit=robustClosestBetweenShapes(shapes[i],shapes[j]);
+      if(!hit)continue;
+
+      // IMPORTANT:
+      // Nu mai conectăm automat "aproape" oriunde, pentru că asta produce scurtături albastre.
+      // Conectăm doar când chiar se ating/intersectează.
+      if(hit.d<=TOUCH){
+        const ip=shapeToPoints(shapes[i])[hit.ai];
+        const jp=shapeToPoints(shapes[j])[hit.bi];
+        nodes[i].push({idx:hit.ai,pt:ip,kind:"touch",to:j,toIdx:hit.bi,toPt:jp,d:hit.d});
+        nodes[j].push({idx:hit.bi,pt:jp,kind:"touch",to:i,toIdx:hit.ai,toPt:ip,d:hit.d});
+      }
+    }
+  }
+
+  nodes.forEach((list,si)=>{
+    const out=[];
+    list.forEach(n=>{
+      const same=out.find(o=>o.to===n.to && Math.abs(o.idx-n.idx)<4 && dist(o.pt,n.pt)<10);
+      if(!same)out.push(n);
+    });
+    nodes[si]=out;
+  });
+  return nodes
+}
+function nearestShapeFromPoint(point,remaining){
+  let best=null;
+  remaining.forEach(i=>{
+    const cp=closestPointOnShapeIndex(shapes[i],point);
+    if(!cp)return;
+    if(!best||cp.d<best.d)best={shape:i,idx:cp.idx,pt:cp.pt,d:cp.d}
+  });
+  return best
+}
+function chooseNextNodeOnCurrentShape(cur,curIdx,remaining,nodes){
+  let best=null;
+  for(const n of nodes[cur]){
+    if(n.to==null || !remaining.has(n.to))continue;
+    const seg=segmentOnShapeByIdx(shapes[cur],curIdx,n.idx);
+    const score=polyLen(seg)+n.d;
+    if(!best||score<best.score)best={node:n,seg,score};
+  }
+  return best
+}
+function findConnectedRoute(curShape,curIdx,targetShape,nodes){
+  const queue=[{shape:curShape,idx:curIdx,path:[],cost:0}];
+  const seen=new Map();
+
+  while(queue.length){
+    queue.sort((a,b)=>a.cost-b.cost);
+    const s=queue.shift();
+    const key=s.shape+"@"+Math.round(s.idx/4);
+    if(seen.has(key)&&seen.get(key)<=s.cost)continue;
+    seen.set(key,s.cost);
+
+    if(s.shape===targetShape)return s;
+
+    for(const n of nodes[s.shape]){
+      if(n.to==null)continue;
+      const seg=segmentOnShapeByIdx(shapes[s.shape],s.idx,n.idx);
+      const c=s.cost+polyLen(seg)+n.d;
+      queue.push({
+        shape:n.to,
+        idx:n.toIdx,
+        cost:c,
+        path:[...s.path,{shape:s.shape,fromIdx:s.idx,node:n,seg}]
+      });
+    }
+  }
+  return null
+}
+function bestConnectedTarget(curShape,curIdx,remaining,nodes){
+  let best=null;
+  remaining.forEach(t=>{
+    const r=findConnectedRoute(curShape,curIdx,t,nodes);
+    if(r&&(!best||r.cost<best.cost))best={target:t,route:r,cost:r.cost};
+  });
+  return best
+}
+function appendRoute(all,route){
+  if(!route||!route.path)return;
+  route.path.forEach(st=>{
+    addPts(all,st.seg);
+    // d este mic/touch; adăugăm punctul nodului, nu scurtături lungi.
+    addPts(all,[st.node.pt]);
+  });
+}
+function buildPreviewPoints(){
+  const center={x:CX,y:CY};
+  const all=[center];
+  if(!shapes.length)return all;
+
+  const nodes=buildTouchGraph();
+  const remaining=new Set(shapes.map((_,i)=>i));
+
+  // SINGURA dată când bila are voie să plece din centru:
+  // la început, către primul contur cel mai apropiat.
+  let first=nearestShapeFromPoint(center,remaining);
+  if(!first)return all;
+
+  let cur=first.shape;
+  let curIdx=first.idx;
+  addPts(all,[center,first.pt]);
+
+  let guard=0;
+  while(remaining.size && guard++<shapes.length*10){
+    addPts(all,fullContourFromIdx(shapes[cur],curIdx));
+    remaining.delete(cur);
+    if(!remaining.size)break;
+
+    const last=all[all.length-1] || first.pt;
+    curIdx=closestPointOnShapeIndex(shapes[cur],last)?.idx ?? curIdx;
+
+    // 1) mergem la următoarea formă NUMAI pe noduri/intersecții ale conturului actual.
+    let direct=chooseNextNodeOnCurrentShape(cur,curIdx,remaining,nodes);
+    if(direct){
+      addPts(all,direct.seg);
+      addPts(all,[direct.node.pt]);
+      cur=direct.node.to;
+      curIdx=direct.node.toIdx;
+      continue;
+    }
+
+    // 2) dacă nu e direct, căutăm rută prin rețeaua existentă.
+    const connected=bestConnectedTarget(cur,curIdx,remaining,nodes);
+    if(connected){
+      appendRoute(all,connected.route);
+      cur=connected.target;
+      curIdx=connected.route.idx;
+      continue;
+    }
+
+    // 3) dacă nu există nicio conexiune reală, NU mai tragem linie prin aer/centru.
+    // Căutăm o componentă nouă doar ca start separat; în sand table asta va fi o deplasare,
+    // dar nu desenăm scurtătura în preview.
+    const next=nearestShapeFromPoint(center,remaining);
+    if(!next)break;
+    cur=next.shape;
+    curIdx=next.idx;
+    addPts(all,[next.pt]); // fără linie centru->obiect după start
+  }
+
+  return all
+}
+function getThrPairs(){
+  const all=buildPreviewPoints();
+  return all.map(p=>{
+    let t=Math.atan2(p.y-CY,p.x-CX);
+    if(t<0)t+=Math.PI*2;
+    return [t,Math.min(dist(p,{x:CX,y:CY})/R,1)]
+  })
+}
+function drawPvFrame(prog){drawGrid(PVCTX,PS,PR);PVCTX.save();PVCTX.beginPath();PVCTX.arc(PCX,PCY,PR,0,Math.PI*2);PVCTX.clip();if(pvPairs.length>1){const total=pvPairs.length,upTo=Math.floor(prog*(total-1));PVCTX.beginPath();for(let i=0;i<=upTo;i++){const[t,rho]=pvPairs[i];const x=PCX+PR*rho*Math.cos(t),y=PCY+PR*rho*Math.sin(t);i?PVCTX.lineTo(x,y):PVCTX.moveTo(x,y)}PVCTX.strokeStyle=LINE;PVCTX.lineWidth=2;PVCTX.globalAlpha=.82;PVCTX.shadowColor="rgba(255,255,255,.35)";PVCTX.shadowBlur=6;PVCTX.stroke();PVCTX.shadowBlur=0;PVCTX.globalAlpha=1;if(upTo>0){const[t,rho]=pvPairs[Math.min(upTo,total-1)],bx=PCX+PR*rho*Math.cos(t),by=PCY+PR*rho*Math.sin(t);PVCTX.beginPath();PVCTX.arc(bx,by,5,0,Math.PI*2);PVCTX.fillStyle="#fff";PVCTX.fill()}}PVCTX.restore();const seek=document.getElementById("pv-seek"); if(seek){seek.value=Math.round(prog*1000); seek.style.setProperty("--progress",(prog*100)+"%");}document.getElementById("prog-num").textContent=Math.round(prog*100)+"%"}
+function setPreviewSpeed(v){pvSpeed=Math.max(.1,Math.min(1,Number(v)/100));document.getElementById("speed-label").textContent=Math.round(pvSpeed*100)+"%"}
+function pvLoop(){if(!pvPaused){pvProg+=0.0045*pvSpeed;if(pvProg>1)pvProg=0;drawPvFrame(pvProg)}pvAnim=requestAnimationFrame(pvLoop)}
+function openPreview(){if(!shapes.length)return;pvPairs=getThrPairs();document.getElementById("pts-count").textContent=pvPairs.length+" puncte θ-ρ";pvProg=0;pvPaused=false; const seek=document.getElementById("pv-seek"); if(seek){seek.value=0;seek.style.setProperty("--progress","0%");}document.getElementById("pause-btn").textContent="⏸ Pauză";document.getElementById("overlay").classList.add("show");if(pvAnim)cancelAnimationFrame(pvAnim);pvLoop()}
+function seekPreview(v){pvProg=Math.max(0,Math.min(1,Number(v)/1000));const seek=document.getElementById("pv-seek"); if(seek)seek.style.setProperty("--progress",(pvProg*100)+"%");drawPvFrame(pvProg);}
+function closePreview(){document.getElementById("overlay").classList.remove("show");if(pvAnim){cancelAnimationFrame(pvAnim);pvAnim=null}}
+function togglePause(){pvPaused=!pvPaused;document.getElementById("pause-btn").textContent=pvPaused?"▶ Continuă":"⏸ Pauză"}
+function restartPv(){pvProg=0;pvPaused=false;document.getElementById("pause-btn").textContent="⏸ Pauză";drawPvFrame(0)}
+
+function saveDrawingToFile(){
+  const data={
+    version:"zenis-draw-v34",
+    created:new Date().toISOString(),
+    shapes,
+    nextId
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  const stamp=new Date().toISOString().replace(/[:.]/g,"-").slice(0,19);
+  a.href=URL.createObjectURL(blob);
+  a.download="zenis-desen-"+stamp+".json";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+  setStatus("✓ Desen salvat ca JSON","#86efac");
+}
+function loadDrawingFromFile(event){
+  const file=event.target.files && event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      const loaded=Array.isArray(data)?data:data.shapes;
+      if(!Array.isArray(loaded))throw new Error("Fișier invalid");
+      shapes=loaded;
+      nextId=(data.nextId||0) || (shapes.reduce((m,s)=>Math.max(m,s.id||0),0)+1);
+      updateUI();
+      setStatus("✓ Desen încărcat","#86efac");
+    }catch(err){
+      console.error(err);
+      setStatus("Fișier JSON invalid","#ffb4b4");
+    }finally{
+      event.target.value="";
+    }
+  };
+  reader.readAsText(file);
+}
+
+redraw();
+</script>
+</body>
+</html>
