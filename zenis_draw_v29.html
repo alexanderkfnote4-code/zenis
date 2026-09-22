@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>ZeNis • Draw v27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#080706;
+  --panel:#14110d;
+  --panel2:#1b1711;
+  --gold:#C8A97E;
+  --gold2:#E2C18A;
+  --text:#F0E6D3;
+  --muted:rgba(240,230,211,.48);
+  --line:rgba(200,169,126,.28);
+  --white:#f7f7f2;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{width:100%;min-height:100%;background:radial-gradient(circle at 50% 28%,#17110a 0%,#080706 52%,#030303 100%);font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);overflow-x:hidden}
+button{font:inherit;border:none;background:none;outline:none!important;cursor:pointer;color:inherit;user-select:none}
+button:focus,button:active,button:focus-visible{outline:none!important;box-shadow:none!important}
+.page{width:min(1180px,100%);margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.shell{border:1px solid rgba(200,169,126,.32);border-radius:16px;background:linear-gradient(180deg,rgba(20,17,13,.82),rgba(8,7,6,.92));box-shadow:0 24px 80px rgba(0,0,0,.48);padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.title{font-size:25px;line-height:1;font-weight:700;color:var(--gold2);letter-spacing:.01em}.subtitle{font-size:13px;color:var(--muted);margin-top:5px}.badge{display:flex;align-items:center;gap:9px;border:1px solid rgba(200,169,126,.45);color:var(--gold2);padding:9px 18px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(200,169,126,.08);letter-spacing:.04em}.badge:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--gold2);box-shadow:0 0 12px rgba(226,193,138,.8)}
+.editor{display:grid;grid-template-columns:240px minmax(390px,560px) 240px;gap:24px;align-items:center;justify-content:center}.side{height:560px;border:1px solid rgba(200,169,126,.34);border-radius:12px;background:linear-gradient(180deg,rgba(28,24,18,.94),rgba(14,12,9,.95));box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);padding:14px;display:flex;flex-direction:column;gap:12px}.side-top{display:none;height:44px;border:1px solid rgba(200,169,126,.35);border-radius:9px;background:linear-gradient(135deg,rgba(200,169,126,.10),rgba(255,255,255,.025));display:flex;align-items:center;justify-content:center;color:var(--gold2);font-weight:700;font-size:0;letter-spacing:.05em}.side-top i{font-size:22px;margin-right:0}.panel{border:1px solid rgba(200,169,126,.18);border-radius:10px;background:rgba(0,0,0,.16);padding:12px;display:flex;flex-direction:column;gap:10px}.panel.grow{flex:1}.section-title{display:none}.divider{display:none}.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}.tool-btn{height:64px;border-radius:9px;border:1px solid rgba(200,169,126,.27)!important;background:rgba(255,255,255,.025)!important;color:rgba(240,230,211,.74);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:9px;font-weight:800;text-transform:uppercase;transition:.15s}.tool-btn i{font-size:25px;color:rgba(247,247,242,.82);transition:.15s}.tool-btn:hover{border-color:rgba(226,193,138,.55)!important;background:rgba(200,169,126,.08)!important;color:var(--gold2)}.tool-btn.active{border-color:rgba(226,193,138,.9)!important;background:rgba(200,169,126,.16)!important;color:var(--gold2);box-shadow:0 0 0 1px rgba(226,193,138,.16),0 0 22px rgba(200,169,126,.09)}.tool-btn.active i{color:var(--gold2)}.action-stack{display:flex;flex-direction:column;gap:7px;margin-top:auto}.wide-btn{height:64px;border:1px solid rgba(200,169,126,.27)!important;border-radius:9px;background:rgba(255,255,255,.025)!important;color:rgba(240,230,211,.74);font-size:10px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:.15s}.wide-btn:hover{background:rgba(200,169,126,.10)!important;color:var(--gold2)}.wide-btn.danger{color:rgba(255,178,178,.82)}.wide-btn.danger:hover{border-color:rgba(255,140,140,.45)!important;color:#ffd1d1}.wide-btn i{font-size:25px;color:rgba(247,247,242,.82)}
+.center{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}.canvas-stage{position:relative;width:560px;height:560px;display:flex;align-items:center;justify-content:center}.canvas-stage:before{content:"";position:absolute;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,126,.08),transparent 62%);filter:blur(3px)}canvas#draw-canvas{width:540px;height:540px;border-radius:50%;display:block;position:relative;z-index:1;box-shadow:0 0 38px rgba(200,169,126,.14),0 0 0 1px rgba(200,169,126,.06)}.status-wrap{height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}.status{font-size:13px;min-height:18px;text-align:center;color:var(--gold2);font-weight:700;letter-spacing:.12em;text-transform:uppercase}.erase-hint{font-size:12px;color:rgba(240,230,211,.75);padding:9px 14px;background:rgba(200,169,126,.06);border-radius:9px;border:1px solid rgba(200,169,126,.18);display:none;text-align:center}.erase-hint.show{display:block}.bottom-btns{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:16px;width:min(760px,100%)}.btn{height:60px;border-radius:11px;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;letter-spacing:.04em;transition:.15s}.btn i{font-size:23px}.btn:disabled{opacity:.32;cursor:not-allowed}.btn-preview,.btn-save{background:rgba(0,0,0,.14);border:1px solid rgba(226,193,138,.55)!important;color:var(--gold2)}.btn-send{background:linear-gradient(180deg,#E5C48D,#C8A97E);color:#0b0906;box-shadow:0 10px 26px rgba(200,169,126,.18)}.btn:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.08)}
+.pv-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}.pv-overlay.show{display:flex}.modal{width:min(840px,100%);border:1px solid rgba(200,169,126,.38);border-radius:18px;background:linear-gradient(180deg,#17130e,#0b0a08);padding:22px;display:grid;grid-template-columns:260px 1fr;gap:24px;box-shadow:0 30px 90px rgba(0,0,0,.6)}.modal-head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start}.modal-title{font-size:18px;font-weight:700}.modal-sub{font-size:12px;color:var(--muted);margin-top:4px;font-family:monospace}.close-btn{width:40px;height:40px;border-radius:9px;border:1px solid rgba(200,169,126,.25)!important;color:rgba(240,230,211,.7);font-size:22px}.preview-box{border:1px solid rgba(200,169,126,.22);border-radius:10px;overflow:hidden;align-self:start}#pv-canvas{display:block;width:100%;height:auto}.modal-main{display:flex;flex-direction:column;justify-content:center;gap:18px}.prog-label{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}.prog-bar{height:12px;background:rgba(200,169,126,.10);border:1px solid rgba(200,169,126,.28);border-radius:999px;padding:2px;overflow:hidden}.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,#B99866,#E5C48D);border-radius:999px;transition:width .1s}.speed-box{border:1px solid rgba(200,169,126,.22);border-radius:10px;padding:12px;background:rgba(200,169,126,.05);display:flex;flex-direction:column;gap:9px}.speed-row{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:700}.speed-row b{color:var(--gold2)}.speed-slider{width:100%;accent-color:#E2C18A}.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-btn,.btn-modal-send{height:58px;border-radius:10px;font-weight:800;text-transform:uppercase}.modal-btn{border:1px solid rgba(200,169,126,.30)!important;background:rgba(200,169,126,.07)!important;color:var(--gold2)}.btn-modal-send{background:linear-gradient(180deg,#E5C48D,#C8A97E)!important;color:#0b0906}
+@media(max-width:1050px){.editor{grid-template-columns:1fr;gap:14px}.side{width:min(540px,100%);height:auto;margin:0 auto}.side.left{order:2}.center{order:1}.side.right{order:3}.canvas-stage{width:min(560px,100vw - 36px);height:auto}canvas#draw-canvas{width:min(540px,100vw - 42px);height:min(540px,100vw - 42px)}.bottom-btns{grid-template-columns:1fr}.modal{grid-template-columns:1fr;max-width:430px}.modal-head{grid-column:auto}}
+@media(max-width:520px){.page{padding:10px}.shell{padding:12px}.header{align-items:flex-start;gap:10px}.title{font-size:21px}.badge{padding:7px 11px;font-size:10px}.tool-btn{height:78px}.side-top{height:52px}.bottom-btns{gap:10px}.btn{height:54px}.modal{padding:16px}}
+</style>
+</head>
+<body>
+<div class="pv-overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Previzualizare masă nisip</div><div class="modal-sub" id="pts-count">0 puncte θ-ρ</div></div>
+      <button class="close-btn" onclick="closePreview()">×</button>
+    </div>
+    <div class="preview-box"><canvas id="pv-canvas" width="340" height="340"></canvas></div>
+    <div class="modal-main">
+      <div><div class="prog-label"><span>Conversie puncte θ-ρ...</span><span id="prog-num">0%</span></div><div class="prog-bar"><div class="prog-fill" id="pv-prog"></div></div></div>
+      <div class="speed-box"><div class="speed-row"><span>Viteză</span><b id="speed-label">100%</b></div><input class="speed-slider" id="speed-slider" type="range" min="10" max="100" value="100" oninput="setPreviewSpeed(this.value)"></div><div class="modal-btns"><button class="modal-btn" id="pause-btn" onclick="togglePause()">⏸ Pauză</button><button class="modal-btn" onclick="restartPv()">↺ Restart</button></div>
+      <button class="btn-modal-send" onclick="setStatus('Gata de desen','#86efac');closePreview()"><i class="ti ti-send"></i> Trimite</button>
+    </div>
+  </div>
+</div>
+<div class="page">
+  <div class="shell">
+    <div class="header">
+      <div><div class="title">Desenează</div><div class="subtitle">Trasează o formă pe nisip</div></div>
+      <div class="badge" id="shapes-badge">0 forme</div>
+    </div>
+    <div class="editor">
+      <aside class="side left">
+        <button class="side-top" onclick="setTool('pen')"><i class="ti ti-adjustments-horizontal"></i> INSTRUMENTE</button>
+        <div class="panel grow"><div class="section-title">ACȚIUNI</div><div class="divider"></div><div class="tool-grid" id="tools-left"></div></div>
+        <div class="panel"><div class="tool-grid" style="grid-template-columns:1fr 1fr 1fr"><button class="tool-btn" onclick="centerShapes()"><i class="ti ti-target-arrow"></i><span>Centru</span></button><button class="tool-btn" onclick="undoShape()"><i class="ti ti-arrow-back-up"></i><span>Undo</span></button><button class="tool-btn danger" onclick="clearAll()" style="color:rgba(255,178,178,.82)"><i class="ti ti-trash"></i><span>Curăță</span></button></div></div>
+      </aside>
+      <main class="center">
+        <div class="canvas-stage"><canvas id="draw-canvas" width="540" height="540"></canvas></div>
+        <div class="status-wrap"><div class="status" id="status-msg">Gata de desen</div><div class="erase-hint" id="erase-hint">Click pe o formă pentru a o șterge</div></div>
+        <div class="bottom-btns">
+          <button class="btn btn-preview" id="btn-preview" onclick="openPreview()" disabled><i class="ti ti-eye"></i>Previzualizează</button>
+          <button class="btn btn-send" id="btn-send" onclick="setStatus('Trimis la masă!','#86efac')" disabled><i class="ti ti-send"></i>Trimite</button>
+          <button class="btn btn-save" id="btn-save" onclick="setStatus('Salvat în librărie!','#86efac')" disabled><i class="ti ti-download"></i>Salvează</button>
+        </div>
+      </main>
+      <aside class="side right">
+        <button class="side-top" onclick="toggleGuides()"><i class="ti ti-focus-centered"></i> GHIDURI</button>
+        <div class="panel grow"><div class="section-title">FORME</div><div class="divider"></div><div class="tool-grid" id="tools-right"></div></div>
+        <div class="action-stack"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+<script>
+const SAND="#C8A97E", LINE="#F8F8F2", FAINT="rgba(200,169,126,.26)";
+const dc=document.getElementById("draw-canvas"),CTX=dc.getContext("2d");
+const S=540,CX=S/2,CY=S/2,R=S/2-18,SW=3;
+let tool="pen",shapes=[],drawing=false,startPt={x:0,y:0},penPts=[];
+let moveShape=null,moveOff={x:0,y:0},rotateShape=null,rotateCenter={x:0,y:0},rotateStart=0,rotateBase=0,rotateBasePoints=null,resizeShape=null,resizeCenter={x:0,y:0},resizeStartDist=1,resizeBase=null,nextId=1,showGuides=true;
+const LEFT_TOOLS=[
+  {id:"trajectory",icon:"ti-route",label:"Traiect"},
+  {id:"erase",icon:"ti-eraser",label:"Șterge"},
+  {id:"move",icon:"ti-hand-move",label:"Mută"},
+  {id:"rotate",icon:"ti-rotate-clockwise",label:"Rotire"},
+  {id:"resize",icon:"ti-arrows-maximize",label:"Resize"}
+];
+const RIGHT_TOOLS=[
+  {id:"pen",icon:"ti-pencil",label:"Desen"},
+  {id:"line",icon:"ti-slash",label:"Linie"},
+  {id:"ellipse",icon:"ti-oval",label:"Elipsă"},
+  {id:"circle",icon:"ti-circle",label:"Cerc"},
+  {id:"rect",icon:"ti-rectangle",label:"Drept"},
+  {id:"semicircle",icon:"ti-circle-half-2",label:"Semicerc"},
+  {id:"triangle",icon:"ti-triangle",label:"Triunghi"},
+  {id:"heart",icon:"ti-heart",label:"Inimă"},
+  {id:"star",icon:"ti-star",label:"Stea"},
+  {id:"spiral",icon:"ti-spiral",label:"Spirală"},
+  {id:"copy",icon:"ti-copy",label:"Copy"}
+];
+function makeTool(t,container){const b=document.createElement("button");b.className="tool-btn"+(t.id===tool?" active":"");b.id="tool-"+t.id;b.innerHTML=`<i class="ti ${t.icon}" aria-hidden="true"></i><span>${t.label}</span>`;b.onclick=()=>setTool(t.id);container.appendChild(b)}
+LEFT_TOOLS.forEach(t=>makeTool(t,document.getElementById("tools-left")));RIGHT_TOOLS.forEach(t=>makeTool(t,document.getElementById("tools-right")));
+function setTool(id){tool=id;document.querySelectorAll(".tool-btn").forEach(x=>x.classList.remove("active"));const b=document.getElementById("tool-"+id);if(b)b.classList.add("active");dc.style.cursor=id==="move"?"grab":id==="rotate"?"alias":id==="resize"?"nwse-resize":id==="erase"?"not-allowed":id==="copy"?"copy":"crosshair";document.getElementById("erase-hint").classList.toggle("show",id==="erase"); if(id==="rotate")setStatus("Alege o formă și trage ca să o rotești"); if(id==="trajectory")setStatus("Desenează traiectoria dintre forme"); if(id==="circle")setStatus("Cerc: apasă în centru și trage raza"); if(id==="ellipse")setStatus("Elipsă: trage diagonala formei"); if(id==="copy")setStatus("Copy: click pe o formă ca să o duplici"); if(id==="resize")setStatus("Resize: click pe formă și trage spre exterior/interior") }
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function setStatus(msg,color){const el=document.getElementById("status-msg");el.textContent=msg;el.style.color=color||"#E2C18A"}
+function updateUI(){document.getElementById("shapes-badge").textContent=shapes.length+" forme";const has=shapes.length>0;["btn-preview","btn-send","btn-save"].forEach(id=>document.getElementById(id).disabled=!has);redraw()}
+function undoShape(){if(shapes.length){shapes.pop();setStatus("Anulat");updateUI()}}
+function clearAll(){shapes=[];setStatus("Canvas curățat");updateUI()}
+function centerShapes(){if(!shapes.length)return;let pts=[];shapes.forEach(s=>pts.push(...shapeToPoints(s)));if(!pts.length)return;const mx=pts.reduce((a,p)=>a+p.x,0)/pts.length,my=pts.reduce((a,p)=>a+p.y,0)/pts.length;moveAll(CX-mx,CY-my);setStatus("Forme centrate");updateUI()}
+function moveAll(dx,dy){shapes.forEach(s=>{if(s.x0!=null){s.x0+=dx;s.y0+=dy}if(s.x1!=null){s.x1+=dx;s.y1+=dy}if(s.points)s.points=s.points.map(p=>({x:p.x+dx,y:p.y+dy}))})}
+function toggleGuides(){showGuides=!showGuides;redraw()}
+function cloneShape(s){const c=JSON.parse(JSON.stringify(s));c.id=nextId++; if(c.x0!=null){c.x0+=18;c.y0+=18} if(c.x1!=null){c.x1+=18;c.y1+=18} if(c.points)c.points=c.points.map(p=>({x:p.x+18,y:p.y+18})); return c}
+function drawGrid(ctx,sz,r){const cx=sz/2,cy=sz/2;ctx.clearRect(0,0,sz,sz);ctx.beginPath();ctx.arc(cx,cy,r+10,0,Math.PI*2);ctx.fillStyle="#090806";ctx.fill();ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();ctx.fillStyle="#0c0b09";ctx.fillRect(0,0,sz,sz);if(showGuides){ctx.fillStyle="rgba(200,169,126,.16)";for(let x=cx-r;x<=cx+r;x+=18){for(let y=cy-r;y<=cy+r;y+=18){if(Math.hypot(x-cx,y-cy)<r-7){ctx.fillRect(x,y,1.15,1.15)}}}[.25,.5,.75].forEach(f=>{ctx.beginPath();ctx.arc(cx,cy,r*f,0,Math.PI*2);ctx.strokeStyle="rgba(200,169,126,.24)";ctx.lineWidth=1.2;ctx.stroke()});for(let i=0;i<12;i++){const a=i*Math.PI*2/12;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle="rgba(200,169,126,.10)";ctx.lineWidth=1;ctx.stroke()}ctx.beginPath();ctx.moveTo(cx-r,cy);ctx.lineTo(cx+r,cy);ctx.moveTo(cx,cy-r);ctx.lineTo(cx,cy+r);ctx.strokeStyle="rgba(200,169,126,.18)";ctx.lineWidth=1;ctx.stroke()}ctx.restore();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle="#C8A97E";ctx.lineWidth=3;ctx.shadowColor="rgba(200,169,126,.5)";ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle="#E2C18A";ctx.fill();ctx.beginPath();ctx.arc(cx,cy-r,6,0,Math.PI*2);ctx.fillStyle="#E2C18A";ctx.fill()}
+function drawShape(ctx,s,preview){
+  ctx.beginPath();ctx.strokeStyle=preview?"rgba(248,248,242,.45)":LINE;ctx.lineWidth=preview?2:SW;ctx.lineCap="round";ctx.lineJoin="round";ctx.shadowColor=preview?"transparent":"rgba(255,255,255,.36)";ctx.shadowBlur=preview?0:7;
+  if((s.type==="pen"||s.type==="trajectory")&&s.points){
+    if(s.type==="trajectory")ctx.setLineDash([10,8]);
+    s.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
+    if(s.type==="trajectory"&&!preview){ctx.shadowBlur=0;ctx.fillStyle=LINE;(s.points||[]).filter((_,i)=>i%18===0||i===s.points.length-1).forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4.2,0,Math.PI*2);ctx.fill()})}
+  }else{
+    const pts=shapeToPoints(s);
+    if(pts.length){pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+      if(["circle","ellipse","rect","triangle","heart","star"].includes(s.type))ctx.closePath();
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);ctx.shadowBlur=0
+}
+function redraw(extra){drawGrid(CTX,S,R);CTX.save();CTX.beginPath();CTX.arc(CX,CY,R,0,Math.PI*2);CTX.clip();shapes.forEach(s=>drawShape(CTX,s,false));if(extra)drawShape(CTX,extra,true);CTX.restore()}
+function getPos(e){const r=dc.getBoundingClientRect(),src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(dc.width/r.width),y:(src.clientY-r.top)*(dc.height/r.height)}}
+function hitTest(p,s){const T=18;if(s.type==="line"){return nearSegment(p,{x:s.x0,y:s.y0},{x:s.x1,y:s.y1},T)}if(s.type==="rect"){const x0=Math.min(s.x0,s.x1),y0=Math.min(s.y0,s.y1),x1=Math.max(s.x0,s.x1),y1=Math.max(s.y0,s.y1);return p.x>x0-T&&p.x<x1+T&&p.y>y0-T&&p.y<y1+T&&(Math.abs(p.y-y0)<T||Math.abs(p.y-y1)<T||Math.abs(p.x-x0)<T||Math.abs(p.x-x1)<T)}if(["circle","ellipse","semicircle","triangle","heart","star","spiral"].includes(s.type)){return shapeToPoints(s).some(pt=>dist(p,pt)<T)}if((s.type==="pen"||s.type==="trajectory")&&s.points)return s.points.some(pt=>dist(p,pt)<T);return false}
+function nearSegment(p,a,b,T){const dx=b.x-a.x,dy=b.y-a.y,len=dx*dx+dy*dy;if(len<1)return false;const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/len));return dist(p,{x:a.x+t*dx,y:a.y+t*dy})<T}
+function getShapeCenter(s){
+  const pts=s.points?s.points:shapeToPoints(s);if(!pts||!pts.length)return{x:CX,y:CY};
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);return{x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2}
+}
+function rotatePoint(p,c,a){const x=p.x-c.x,y=p.y-c.y,ca=Math.cos(a),sa=Math.sin(a);return{x:c.x+x*ca-y*sa,y:c.y+x*sa+y*ca}}
+function scalePoint(p,c,k){return{x:c.x+(p.x-c.x)*k,y:c.y+(p.y-c.y)*k}}
+function snapshotShape(s){return JSON.parse(JSON.stringify(s))}
+function applyScaleFromBase(target,base,c,k){if(base.x0!=null){target.x0=c.x+(base.x0-c.x)*k;target.y0=c.y+(base.y0-c.y)*k}if(base.x1!=null){target.x1=c.x+(base.x1-c.x)*k;target.y1=c.y+(base.y1-c.y)*k}if(base.points)target.points=base.points.map(pt=>scalePoint(pt,c,k))}
+function applyRotation(s,pts){if(!s.rot)return pts;const c=(s.type==="circle"||s.type==="star")?{x:s.x0,y:s.y0}:{x:(s.x0+s.x1)/2,y:(s.y0+s.y1)/2};return pts.map(p=>rotatePoint(p,c,s.rot))}
+function reversePts(pts){return [...pts].reverse()}
+function down(p){
+  if(dist(p,{x:CX,y:CY})>R+8)return;
+  if(tool==="erase"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){shapes=shapes.filter(s=>s.id!==hit.id);setStatus("Formă ștearsă");updateUI()}return}
+  if(tool==="copy"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){shapes.push(cloneShape(hit));setStatus("Formă copiată");updateUI()}return}
+  if(tool==="move"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){moveShape=hit;moveOff=p;dc.style.cursor="grabbing"}return}
+  if(tool==="resize"){const hit=[...shapes].reverse().find(s=>hitTest(p,s));if(hit){resizeShape=hit;resizeCenter=getShapeCenter(hit);resizeStartDist=Math.max(6,dist(p,resizeCenter));resizeBase=snapshotShape(hit);dc.style.cursor="nwse-resize";setStatus("Redimensionează forma");redraw()}return}
+  if(tool==="rotate"){
+    const hit=[...shapes].reverse().find(s=>s.type!=="trajectory"&&hitTest(p,s));
+    if(hit){rotateShape=hit;rotateCenter=getShapeCenter(hit);rotateStart=Math.atan2(p.y-rotateCenter.y,p.x-rotateCenter.x);rotateBase=hit.rot||0;rotateBasePoints=hit.points?hit.points.map(pt=>({...pt})):null;dc.style.cursor="grabbing";setStatus("Rotește forma");redraw()}
+    return
+  }
+  drawing=true;startPt=p;penPts=[p]
+}
+function move(p){
+  if(rotateShape){const a=Math.atan2(p.y-rotateCenter.y,p.x-rotateCenter.x)-rotateStart;if(rotateBasePoints){rotateShape.points=rotateBasePoints.map(pt=>rotatePoint(pt,rotateCenter,a))}else rotateShape.rot=rotateBase+a;redraw();return}
+  if(resizeShape){const k=Math.max(.12,Math.min(5,dist(p,resizeCenter)/resizeStartDist));applyScaleFromBase(resizeShape,resizeBase,resizeCenter,k);redraw();return}
+  if(moveShape){const dx=p.x-moveOff.x,dy=p.y-moveOff.y;moveOff=p;if(moveShape.x0!=null){moveShape.x0+=dx;moveShape.y0+=dy}if(moveShape.x1!=null){moveShape.x1+=dx;moveShape.y1+=dy}if(moveShape.points)moveShape.points=moveShape.points.map(pt=>({x:pt.x+dx,y:pt.y+dy}));redraw();return}
+  if(!drawing)return;if(tool==="pen"||tool==="trajectory"){if(dist(p,penPts[penPts.length-1])>2)penPts.push(p);redraw({type:tool,points:[...penPts],id:-1})}else redraw({type:tool,x0:startPt.x,y0:startPt.y,x1:p.x,y1:p.y,id:-1})
+}
+function up(p){
+  dc.style.cursor=tool==="move"?"grab":tool==="rotate"?"alias":tool==="resize"?"nwse-resize":tool==="erase"?"not-allowed":"crosshair";
+  if(rotateShape){rotateShape=null;rotateBasePoints=null;setStatus("Rotit");updateUI();return}
+  if(resizeShape){resizeShape=null;resizeBase=null;setStatus("Redimensionat");updateUI();return}
+  if(moveShape){moveShape=null;updateUI();return}
+  if(!drawing)return;drawing=false;let ns=null;if((tool==="pen"||tool==="trajectory")&&penPts.length>3)ns={type:tool,points:[...penPts],id:nextId++};else if(!["pen","trajectory","erase","move","rotate","resize","copy"].includes(tool)&&dist(startPt,p)>8)ns={type:tool,x0:startPt.x,y0:startPt.y,x1:p.x,y1:p.y,rot:0,id:nextId++};if(ns){shapes.push(ns);setStatus(tool==="trajectory"?"Traiectorie adăugată":"Gata de desen");updateUI()}else redraw()
+}
+dc.addEventListener("mousedown",e=>down(getPos(e)));dc.addEventListener("mousemove",e=>move(getPos(e)));dc.addEventListener("mouseup",e=>up(getPos(e)));dc.addEventListener("mouseleave",()=>{if(rotateShape){rotateShape=null;rotateBasePoints=null;updateUI()}if(resizeShape){resizeShape=null;resizeBase=null;updateUI()}if(moveShape){moveShape=null;updateUI()}if(drawing&&(tool==="pen"||tool==="trajectory")&&penPts.length>3){shapes.push({type:tool,points:[...penPts],id:nextId++});updateUI()}drawing=false});dc.addEventListener("touchstart",e=>{e.preventDefault();down(getPos(e))},{passive:false});dc.addEventListener("touchmove",e=>{e.preventDefault();move(getPos(e))},{passive:false});dc.addEventListener("touchend",e=>{e.preventDefault();if(e.changedTouches&&e.changedTouches[0])up(getPos({touches:[e.changedTouches[0]]}))},{passive:false});
+const PVC=document.getElementById("pv-canvas"),PVCTX=PVC.getContext("2d"),PS=340,PCX=PS/2,PCY=PS/2,PR=PS/2-18;let pvPairs=[],pvProg=0,pvPaused=false,pvAnim=null,pvSpeed=1;
+function sampleLine(x0,y0,x1,y1,n=72){return Array.from({length:n},(_,i)=>({x:x0+(x1-x0)*(i/(n-1)),y:y0+(y1-y0)*(i/(n-1))}))}
+function sampleArc(cx,cy,rx,ry,a0,a1,n=96){return Array.from({length:n},(_,i)=>{const a=a0+(a1-a0)*(i/(n-1));return{x:cx+rx*Math.cos(a),y:cy+ry*Math.sin(a)}})}
+function bbox(s){return{x0:Math.min(s.x0,s.x1),y0:Math.min(s.y0,s.y1),x1:Math.max(s.x0,s.x1),y1:Math.max(s.y0,s.y1),cx:(s.x0+s.x1)/2,cy:(s.y0+s.y1)/2,w:Math.abs(s.x1-s.x0),h:Math.abs(s.y1-s.y0)}}
+function shapeToPoints(s){
+  if(s.type==="pen"||s.type==="trajectory")return(s.points||[]).filter((_,i)=>i%2===0);
+  if(s.type==="line")return applyRotation(s,sampleLine(s.x0,s.y0,s.x1,s.y1));
+  if(s.type==="ellipse"){const rx=Math.abs(s.x1-s.x0)/2,ry=Math.abs(s.y1-s.y0)/2;return applyRotation(s,sampleArc((s.x0+s.x1)/2,(s.y0+s.y1)/2,rx,ry,0,Math.PI*2))}
+  if(s.type==="circle"){const rr=dist({x:s.x0,y:s.y0},{x:s.x1,y:s.y1});return sampleArc(s.x0,s.y0,rr,rr,0,Math.PI*2)}
+  if(s.type==="semicircle"){const cx2=(s.x0+s.x1)/2,cy2=(s.y0+s.y1)/2,rx=Math.abs(s.x1-s.x0)/2,ry=Math.abs(s.y1-s.y0)/2;return applyRotation(s,sampleArc(cx2,cy2,rx,ry,Math.PI,0))}
+  if(s.type==="rect"){const x0=Math.min(s.x0,s.x1),y0=Math.min(s.y0,s.y1),x1=Math.max(s.x0,s.x1),y1=Math.max(s.y0,s.y1);return applyRotation(s,[...sampleLine(x0,y0,x1,y0),...sampleLine(x1,y0,x1,y1),...sampleLine(x1,y1,x0,y1),...sampleLine(x0,y1,x0,y0)])}
+  if(s.type==="triangle"){const tx=(s.x0+s.x1)/2;return applyRotation(s,[...sampleLine(tx,s.y0,s.x1,s.y1),...sampleLine(s.x1,s.y1,s.x0,s.y1),...sampleLine(s.x0,s.y1,tx,s.y0)])}
+  if(s.type==="star"){const cx=s.x0,cy=s.y0,rad=dist({x:s.x0,y:s.y0},{x:s.x1,y:s.y1}),pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?rad*.43:rad;pts.push({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)})}return applyRotation(s,pts)}
+  if(s.type==="heart"){const b=bbox(s),pts=[];for(let i=0;i<130;i++){const t=Math.PI*2*i/129;const x=16*Math.pow(Math.sin(t),3);const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));pts.push({x:b.cx+(x/34)*b.w,y:b.cy+(y/34)*b.h})}return applyRotation(s,pts)}
+  if(s.type==="spiral"){const b=bbox(s),cx=b.cx,cy=b.cy,maxr=Math.min(b.w,b.h)/2,pts=[];const turns=3.2;for(let i=0;i<180;i++){const k=i/179,a=k*Math.PI*2*turns,r=maxr*k;pts.push({x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)})}return applyRotation(s,pts)}
+  return[]
+}
+function isClosedShape(s){return ["circle","ellipse","rect","triangle","heart","star"].includes(s.type)}
+function nearestIndex(pts,target){let bi=0,bd=Infinity;pts.forEach((p,i)=>{const d=dist(p,target);if(d<bd){bd=d;bi=i}});return bi}
+function pathOpenFromNearestAndReturn(pts,entry){
+  if(!pts.length)return pts;
+  const idx=nearestIndex(pts,entry);
+  // Dacă intrarea este aproape de mijlocul unei forme deschise (ex: semicerc),
+  // nu tăiem cu o linie dreaptă între capete. Mergem pe contur până la un capăt,
+  // apoi pe același contur până la celălalt capăt și revenim pe contur la punctul de intrare.
+  if(idx>2 && idx<pts.length-3){
+    return [
+      ...pts.slice(0,idx+1).reverse(),
+      ...pts.slice(1),
+      ...pts.slice(idx,pts.length-1).reverse()
+    ];
+  }
+  return dist(entry,pts[pts.length-1])<dist(entry,pts[0])?reversePts(pts):pts;
+}
+function orientShapePoints(s,entry){
+  let pts=shapeToPoints(s);if(!pts.length)return pts;
+  if(!entry)return pts;
+  if(isClosedShape(s)){
+    const idx=nearestIndex(pts,entry);
+    const out=[...pts.slice(idx),...pts.slice(0,idx+1)];
+    return out;
+  }
+  if(s.type==="semicircle")return pathOpenFromNearestAndReturn(pts,entry);
+  return dist(entry,pts[pts.length-1])<dist(entry,pts[0])?reversePts(pts):pts;
+}
+function bestTrajectoryBetween(aEnd,nextShape,trajectories,used){
+  const nextPts=shapeToPoints(nextShape);if(!nextPts.length)return null;
+  let best=null;
+  trajectories.forEach((t,idx)=>{if(used.has(idx))return;const pts=shapeToPoints(t);if(pts.length<2)return;[
+      pts,
+      reversePts(pts)
+    ].forEach(oriented=>{const first=oriented[0],last=oriented[oriented.length-1];const ni=nearestIndex(nextPts,last);const score=dist(aEnd,first)+dist(last,nextPts[ni]);if(!best||score<best.score)best={idx,pts:oriented,entry:nextPts[ni],score};});
+  });
+  if(best){used.add(best.idx);return best}
+  return null
+}
+function addPts(dst,pts){
+  if(!pts||!pts.length)return;
+  if(dst.length&&dist(dst[dst.length-1],pts[0])<3)dst.push(...pts.slice(1));
+  else dst.push(...pts);
+}
+function splitConnectorAndShapes(){
+  // Traiectoria este mereu drum de legătură. Linia simplă poate fi și ea drum de legătură
+  // dacă ajută să ajungă la următoarea formă fără tăietură prin interior.
+  const connectors=[], normal=[];
+  shapes.forEach(s=>{
+    if(s.type==="trajectory")connectors.push(s);
+    else normal.push(s);
+  });
+  return {normal,connectors};
+}
+function polylineLength(pts,a,b){
+  if(!pts.length||a===b)return 0;
+  let len=0,step=a<b?1:-1;
+  for(let i=a;i!==b;i+=step)len+=dist(pts[i],pts[i+step]);
+  return len;
+}
+function slicePath(pts,a,b){
+  if(a===b)return [pts[a]];
+  if(a<b)return pts.slice(a,b+1);
+  return pts.slice(b,a+1).reverse();
+}
+function closestShapePointToConnector(shapePts,connPts){
+  let best={ci:0,si:0,d:Infinity};
+  for(let ci=0;ci<connPts.length;ci++){
+    const si=nearestIndex(shapePts,connPts[ci]);
+    const d=dist(connPts[ci],shapePts[si]);
+    if(d<best.d)best={ci,si,d};
+  }
+  return best;
+}
+function bestConnectorSegment(entry,nextShape,connectors){
+  const nextPts=shapeToPoints(nextShape);if(!nextPts.length)return null;
+  const directIdx=nearestIndex(nextPts,entry);
+  const directDist=dist(entry,nextPts[directIdx]);
+  // dacă forma atinge deja poziția bilei, nu folosim traiectorie inutilă
+  if(directDist<10)return null;
+  let best=null;
+  connectors.forEach((t,idx)=>{
+    const pts=shapeToPoints(t);if(pts.length<2)return;
+    const startIdx=nearestIndex(pts,entry);
+    const hit=closestShapePointToConnector(nextPts,pts);
+    const segLen=polylineLength(pts,startIdx,hit.ci);
+    const score=dist(entry,pts[startIdx]) + segLen + hit.d;
+    // Acceptăm traiectoria doar dacă chiar se apropie/intersectează forma.
+    if(hit.d<24 && (!best||score<best.score)){
+      best={idx,pts:slicePath(pts,startIdx,hit.ci),entry:nextPts[hit.si],score,hitDist:hit.d};
+    }
+  });
+  return best;
+}
+function nearestShapeIndexFrom(entry,normal,remaining){
+  let best=null;
+  remaining.forEach(i=>{
+    const pts=shapeToPoints(normal[i]);if(!pts.length)return;
+    const ni=nearestIndex(pts,entry),d=dist(entry,pts[ni]);
+    if(!best||d<best.d)best={i,d};
+  });
+  return best?best.i:null;
+}
+function buildPreviewPoints(){
+  const {normal,connectors}=splitConnectorAndShapes();
+  const center={x:CX,y:CY};
+  let all=[center],entry=center;
+  if(!normal.length){
+    const remaining=new Set(connectors.map((_,i)=>i));
+    while(remaining.size){
+      let best=null;
+      remaining.forEach(idx=>{
+        let pts=shapeToPoints(connectors[idx]);if(!pts.length)return;
+        let a=dist(entry,pts[0]),b=dist(entry,pts[pts.length-1]);
+        if(b<a){pts=reversePts(pts);a=b}
+        if(!best||a<best.d)best={idx,pts,d:a};
+      });
+      if(!best)break;
+      remaining.delete(best.idx);
+      addPts(all,best.pts);entry=all[all.length-1];
+    }
+    return all;
+  }
+  const remaining=new Set(normal.map((_,i)=>i));
+  while(remaining.size){
+    let idx=nearestShapeIndexFrom(entry,normal,remaining);
+    if(idx==null)break;
+    const shape=normal[idx];
+    const link=bestConnectorSegment(entry,shape,connectors);
+    if(link&&link.pts.length){
+      addPts(all,link.pts);
+      entry=link.pts[link.pts.length-1];
+    }
+    const pts=orientShapePoints(shape,entry);
+    addPts(all,pts);
+    entry=all.length?all[all.length-1]:center;
+    remaining.delete(idx);
+  }
+  return all;
+}
+function getThrPairs(){let all=buildPreviewPoints();if(all.length){const center={x:CX,y:CY};if(dist(all[0],center)>2)all=[center,...all]}return all.map(p=>{let t=Math.atan2(-(p.y-CY),p.x-CX);if(t<0)t+=2*Math.PI;return[t,Math.min(dist(p,{x:CX,y:CY})/R,1)]})}
+function drawPvFrame(prog){drawGrid(PVCTX,PS,PR);PVCTX.save();PVCTX.beginPath();PVCTX.arc(PCX,PCY,PR,0,Math.PI*2);PVCTX.clip();if(pvPairs.length>1){const total=pvPairs.length,upTo=Math.floor(prog*(total-1));PVCTX.beginPath();for(let i=0;i<=upTo;i++){const[t,rho]=pvPairs[i];const x=PCX+PR*rho*Math.cos(t),y=PCY+PR*rho*Math.sin(t);i?PVCTX.lineTo(x,y):PVCTX.moveTo(x,y)}PVCTX.strokeStyle=LINE;PVCTX.lineWidth=2;PVCTX.globalAlpha=.82;PVCTX.shadowColor="rgba(255,255,255,.35)";PVCTX.shadowBlur=6;PVCTX.stroke();PVCTX.shadowBlur=0;PVCTX.globalAlpha=1;if(upTo>0){const[t,rho]=pvPairs[Math.min(upTo,total-1)],bx=PCX+PR*rho*Math.cos(t),by=PCY+PR*rho*Math.sin(t);PVCTX.beginPath();PVCTX.arc(bx,by,5,0,Math.PI*2);PVCTX.fillStyle="#fff";PVCTX.fill()}}PVCTX.restore();document.getElementById("pv-prog").style.width=(prog*100)+"%";document.getElementById("prog-num").textContent=Math.round(prog*100)+"%"}
+function setPreviewSpeed(v){pvSpeed=Math.max(.1,Math.min(1,Number(v)/100));document.getElementById("speed-label").textContent=Math.round(pvSpeed*100)+"%"}
+function pvLoop(){if(!pvPaused){pvProg+=0.0045*pvSpeed;if(pvProg>1)pvProg=0;drawPvFrame(pvProg)}pvAnim=requestAnimationFrame(pvLoop)}
+function openPreview(){if(!shapes.length)return;pvPairs=getThrPairs();document.getElementById("pts-count").textContent=pvPairs.length+" puncte θ-ρ";pvProg=0;pvPaused=false;document.getElementById("pause-btn").textContent="⏸ Pauză";document.getElementById("overlay").classList.add("show");if(pvAnim)cancelAnimationFrame(pvAnim);pvLoop()}
+function closePreview(){document.getElementById("overlay").classList.remove("show");if(pvAnim){cancelAnimationFrame(pvAnim);pvAnim=null}}
+function togglePause(){pvPaused=!pvPaused;document.getElementById("pause-btn").textContent=pvPaused?"▶ Continuă":"⏸ Pauză"}
+function restartPv(){pvProg=0;pvPaused=false;document.getElementById("pause-btn").textContent="⏸ Pauză";drawPvFrame(0)}
+redraw();
+</script>
+</body>
+</html>
