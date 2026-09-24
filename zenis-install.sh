@@ -8,7 +8,7 @@
 set -e
 PIN=7ddb7f60671c8a6e4b03f935f648433784745cba     # versiunea Dune Weaver testata cu ZeNis
 UPSTREAM=https://github.com/tuanchris/dune-weaver
-REPO_RAW="${ZENIS_REPO_RAW:-https://github.com/alexanderkfnote4-code/zenis/raw/main}"
+REPO_RAW="${ZENIS_REPO_RAW:-https://raw.githubusercontent.com/alexanderkfnote4-code/zenis/main}"
 DW="$HOME/dune-weaver"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 S='\033[38;5;179m'; N='\033[0m'
@@ -26,7 +26,7 @@ sudo -v   # cere parola o singura data
 # 1. Pachetul ZeNis (local, langa script, sau de pe GitHub)
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 if [ -f "$HERE/zenis-overlay.tar.gz" ]; then cp "$HERE/zenis-overlay.tar.gz" "$TMP/o.tgz"
-else echo "Descarc pachetul ZeNis..."; curl -fsSL "$REPO_RAW/zenis-overlay.tar.gz" -o "$TMP/o.tgz"; fi
+else echo "Descarc pachetul ZeNis..."; curl -fsSL "$REPO_RAW/zenis-overlay.tar.gz?t=$(date +%s)" -o "$TMP/o.tgz"; fi
 tar -xzf "$TMP/o.tgz" -C "$TMP"
 
 # 2. Baza (doar pe un Pi gol)
