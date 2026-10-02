@@ -13,6 +13,8 @@ ZeNis este o versiune personalizată a [Dune Weaver](https://github.com/tuanchri
 - **Viteza de curățare** se aplică tuturor curățărilor (inclusiv Good Night și curățărilor personalizate), nu și modelului care urmează
 - **Rutine Good Morning / Good Night**: trezire și culcare cu nisip, lumină și muzică, la oră fixă
 - **Actualizare la distanță** din acest repo, cu backup și revenire automată
+- **Homing cu senzor magnetic** pe unghi (GPIO17 pe Raspberry Pi): după Home masa știe exact unde e „nordul”
+- **Calibrare** (tab separat, activat din Settings): coordonatele bilei și alinierea cadranelor cu LED-urile
 
 ## Instalare (Raspberry Pi OS 64-bit)
 Funcționează pe un Pi gol sau peste o masă existentă. Rulează **fără sudo**:
@@ -52,6 +54,24 @@ Sunetul și lumina scad odată cu bila și ajung la 10% exact când bila e în c
 Ambele au buton **„Testează acum”**.
 
 **Oprirea unei alarme în curs:** cât rulează o alarmă, pe orice pagină apare sus butonul **„Oprește alarma”**: bila se oprește unde e, muzica se oprește, luminile revin la efectul de repaus, iar volumul la normal. Același efect îl are și Stop-ul de pe masă. Dacă pornești alt model în timpul unei alarme, alarma se retrage singură. Rutinele folosesc ora Raspberry Pi-ului, luată automat de pe internet (NTP) și afișată în fiecare card împreună cu fusul orar. Pi 4 nu are baterie pentru ceas: fără internet după o pană de curent, ora poate fi greșită (pagina avertizează „nesincronizată”). Fusul orar se setează cu `sudo raspi-config` → Localisation → Timezone.
+
+## Homing cu senzor magnetic și Calibrare
+**Cablaj:** modulul Hall (3144E + LM393) la Raspberry Pi: **VCC → pin 1 (3.3V)**, **GND → pin 9**, **DO → pin 11 (GPIO17)**. AO rămâne nelegat. Nu alimenta modulul la 5V, pentru că ieșirea ar trimite 5V în Pi. Senzorul dă LOW când magnetul e în dreptul lui; verificare din terminal: `pinctrl get 17`.
+
+**Activare:** Settings → Homing Configuration → **Homing cu senzor magnetic (GPIO17)**. De atunci butonul Home (și homing-ul la pornire sau din playlist):
+1. aduce bila în centru (crash homing pe rază);
+2. rotește brațul până găsește magnetul, se dă înapoi și trece încet peste el, măsurând unde începe și unde se termină zona;
+3. se oprește la mijlocul zonei și aduce din nou bila în centru. Unghiul de acolo devine *Sensor Offset* (implicit 0°).
+
+În timpul rotirii raza e compensată, deci bila rămâne în centru. Dacă magnetul nu e găsit, masa face homing-ul obișnuit (rămâne utilizabilă), iar eroarea apare în Settings și în pagina Calibrare.
+
+**Calibrare:** în același loc bifezi **Pagina Calibrare** și apare tab-ul **Calibrare**. Pagina arată masa cu LED-urile, cadranele, poziția bilei și coordonatele θ (unghi) și ρ (rază), cu butoane de mișcare (±0.2°, ±1°, ±10°, centru, margine). Pași:
+1. **Home** cu senzorul;
+2. **Aprinde LED 1**, apasă **Margine** și rotește bila până e exact în dreptul lui;
+3. **Aici e LED-ul 1**: poziția se salvează față de magnet, deci rămâne valabilă după fiecare Home;
+4. **Mergi la LED 27**: bila trebuie să ajungă la începutul cadranului 2; dacă ajunge pe partea opusă, bifează **Sens invers**.
+
+Butoanele de lumini: **Arată cadranele** (5 zone colorate; 132 LED-uri → 26, 26, 26, 26, 28), **LED urmărește bila**, **Revino la normal**. La ieșirea din pagină luminile revin singure la scena salvată. Setările sunt în `~/dune-weaver/zenis_calib.json`.
 
 ## WiFi pentru client
 Dacă masa nu găsește o rețea cunoscută, pornește hotspot-ul **ZeNis**. Clientul se conectează cu telefonul, alege WiFi-ul de acasă și introduce parola.
