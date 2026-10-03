@@ -1,6 +1,6 @@
 # ZeNis — Sand Table
 
-ZeNis este o versiune personalizată a [Dune Weaver](https://github.com/tuanchris/dune-weaver) pentru mese de nisip cu Raspberry Pi.
+ZeNis este sistemul pentru mesele de nisip ZeNis cu Raspberry Pi.
 
 ## Ce adaugă ZeNis
 - **Temă nisipiu** și numele ZeNis (aplicație, masă, hotspot WiFi)
@@ -41,7 +41,7 @@ Backup-urile automate sunt în `~/.zenis-backup/` (ultimele 5), inclusiv o copie
 Mesele se pot actualiza apoi din aplicație sau cu `sudo zenis-update`.
 
 ## Live (desen de mână)
-În tab-ul **Desenează** apasă **Live**. Pornește modul (sau începe direct să desenezi), trage linii cu degetul: după 5 secunde fără atingere, masa le desenează la viteza aleasă. Liniile punctate așteaptă, cele aurii sunt deja pe nisip, iar punctul auriu e bila. Bila nu se poate ridica, deci între două linii separate trage o legătură. Comutatorul **5s / 0** alege dacă masa așteaptă 5 secunde după ce te oprești sau desenează **în timp real**, cât tragi linia. **Centru** duce bila în centru pe o linie dreaptă. **Oprește Live** readuce luminile pe repaus și oprește muzica. Pentru depanare, fiecare linie e notată în jurnal: `journalctl -u dune-weaver | grep Live:`.
+În tab-ul **Desenează** apasă **Live**. Pornește modul (sau începe direct să desenezi), trage linii cu degetul: după 5 secunde fără atingere, masa le desenează la viteza aleasă. Liniile punctate așteaptă, cele aurii sunt deja pe nisip, iar punctul auriu e bila. Bila nu se poate ridica, deci între două linii separate trage o legătură. Comutatorul **5s / 0** alege dacă masa așteaptă 5 secunde după ce te oprești sau desenează **în timp real**, cât tragi linia. **Centru** duce bila în centru pe o linie dreaptă. **Oprește Live** readuce luminile pe repaus și oprește muzica. Pentru depanare, fiecare linie e notată în jurnal (meniul ☰ → View Logs, caută „Live:”).
 
 ## Rutine: Good Morning și Good Night (tab-ul „Rutine”)
 Configurezi rutina și apeși **„Salvează alarma”**. Alarmele salvate apar în listă (oră, zile, playlist, melodie, data salvării) și se opresc sau pornesc din comutator (fără să fie șterse) și se șterg din butonul din dreapta. Poți avea oricâte, de exemplu Good Morning 07:00 luni–vineri și 09:00 în weekend. Între două alarme active trebuie cel puțin 30 de minute (verificat pe toată săptămâna, inclusiv peste miezul nopții); o alarmă la aceeași oră sau prea aproape nu se salvează și apare motivul. Ora se alege în format de 24 de ore.
@@ -83,7 +83,7 @@ Din meniul **☰** (sus, dreapta) alegi **Ecran cadran** sau **Ecran clasic**. A
 3. **Aici e LED-ul 1**: poziția se salvează față de magnet, deci rămâne valabilă după fiecare Home;
 4. **Mergi la LED 27**: bila trebuie să ajungă la începutul cadranului 2; dacă ajunge pe partea opusă, bifează **Sens invers**.
 
-Butoanele de lumini: **Arată cadranele** (5 zone colorate; 132 LED-uri → 26, 26, 26, 26, 28), **LED urmărește bila**, **Revino la normal**. La ieșirea din pagină luminile revin singure la scena salvată. Setările sunt în `~/dune-weaver/zenis_calib.json`.
+Butoanele de lumini: **Arată cadranele** (5 zone colorate; 132 LED-uri → 26, 26, 26, 26, 28), **LED urmărește bila**, **Revino la normal**. La ieșirea din pagină luminile revin singure la scena salvată. Setările sunt în fișierul `zenis_calib.json` din folderul aplicației.
 
 ## WiFi pentru client
 Dacă masa nu găsește o rețea cunoscută, pornește hotspot-ul **ZeNis**. Clientul se conectează cu telefonul, alege WiFi-ul de acasă și introduce parola.
@@ -92,4 +92,4 @@ Dacă masa nu găsește o rețea cunoscută, pornește hotspot-ul **ZeNis**. Cli
 Sursele React ale interfeței ZeNis sunt în `zenis-frontend-src.zip` (folderul `frontend/`). Compilare: `npm install` și `npm run build`.
 
 ## Licență
-ZeNis se bazează pe Dune Weaver (© tuanchris și contribuitorii), licențiat **GPL-3.0**. Modificările ZeNis sunt distribuite sub aceeași licență, iar codul sursă este disponibil în acest repo.
+ZeNis include software open-source licențiat **GPL-3.0**; modificările ZeNis sunt distribuite sub aceeași licență.

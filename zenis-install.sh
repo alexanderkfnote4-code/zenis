@@ -1,12 +1,12 @@
 #!/bin/bash
 # ================================================================
 #  ZeNis - instalare completa pe Raspberry Pi (64-bit)
-#  Pi gol:          instaleaza baza Dune Weaver + toate modificarile ZeNis
+#  Pi gol:          instaleaza baza + toate modificarile ZeNis
 #  Masa existenta:  aplica doar modificarile ZeNis (cu backup)
 #  Utilizare:       bash zenis-install.sh      (NU cu sudo)
 # ================================================================
 set -e
-PIN=7ddb7f60671c8a6e4b03f935f648433784745cba     # versiunea Dune Weaver testata cu ZeNis
+PIN=7ddb7f60671c8a6e4b03f935f648433784745cba     # versiunea de baza testata cu ZeNis
 UPSTREAM=https://github.com/tuanchris/dune-weaver
 REPO_RAW="${ZENIS_REPO_RAW:-https://raw.githubusercontent.com/alexanderkfnote4-code/zenis/main}"
 DW="$HOME/dune-weaver"
@@ -31,12 +31,12 @@ tar -xzf "$TMP/o.tgz" -C "$TMP"
 
 # 2. Baza (doar pe un Pi gol)
 if [ ! -f "$DW/main.py" ]; then
-  echo -e "${S}==> Instalez baza (Dune Weaver $PIN)$N"
+  echo -e "${S}==> Instalez baza ($PIN)$N"
   sudo apt-get update -qq && sudo apt-get install -y -qq git curl >/dev/null
   mkdir -p "$DW" && cd "$DW"
   git init -q && git remote add origin "$UPSTREAM"
   git fetch -q --depth 1 origin "$PIN" && git checkout -q FETCH_HEAD
-  sed -i 's/HOTSPOT_SSID="Dune Weaver"/HOTSPOT_SSID="ZeNis"/' wifi/setup-wifi.sh
+  sed -i 's/^HOTSPOT_SSID=.*/HOTSPOT_SSID="ZeNis"/' wifi/setup-wifi.sh
   echo -e "${S}==> Rulez installer-ul de baza (raspunde la intrebarea USB/UART)$N"
   bash setup-pi.sh
 else
