@@ -15,6 +15,7 @@ ZeNis este o versiune personalizată a [Dune Weaver](https://github.com/tuanchri
 - **Actualizare la distanță** din acest repo, cu backup și revenire automată
 - **Homing cu senzor magnetic** pe unghi (GPIO17 pe Raspberry Pi): după Home masa știe exact unde e „nordul”
 - **Calibrare** (tab separat, activat din Settings): coordonatele bilei și alinierea cadranelor cu LED-urile
+- **Ecran cadran** (opțional, din meniul ☰): rama se rotește ca la un ceas, meniurile stau în 10 cercuri, iar în mijloc se vede desenul în lucru
 
 ## Instalare (Raspberry Pi OS 64-bit)
 Funcționează pe un Pi gol sau peste o masă existentă. Rulează **fără sudo**:
@@ -54,6 +55,17 @@ Sunetul și lumina scad odată cu bila și ajung la 10% exact când bila e în c
 Ambele au buton **„Testează acum”**.
 
 **Oprirea unei alarme în curs:** cât rulează o alarmă, pe orice pagină apare sus butonul **„Oprește alarma”**: bila se oprește unde e, muzica se oprește, luminile revin la efectul de repaus, iar volumul la normal. Același efect îl are și Stop-ul de pe masă. Dacă pornești alt model în timpul unei alarme, alarma se retrage singură. Rutinele folosesc ora Raspberry Pi-ului, luată automat de pe internet (NTP) și afișată în fiecare card împreună cu fusul orar. Pi 4 nu are baterie pentru ceas: fără internet după o pană de curent, ora poate fi greșită (pagina avertizează „nesincronizată”). Fusul orar se setează cu `sudo raspi-config` → Localisation → Timezone.
+
+## Ecran cadran
+Din meniul **☰** (sus, dreapta) alegi **Ecran cadran** sau **Ecran clasic**. Alegerea se ține pe fiecare telefon sau calculator.
+
+- **Rama** se rotește cu degetul ca rama unui ceas (pe calculator: rotița mouse-ului sau săgețile); la fiecare 20° treci la următoarea opțiune.
+- **Cele 10 cercuri** sunt meniurile: Modele, Playlisturi, Desenează, Control, Viteză, Lumini, Audio, Rutine, Setări și Listă (sau Calibrare, dacă e activată). Atingi un cerc ca să intri în meniu; opțiunile lui apar în cercuri. **Meniu** (sus) te întoarce.
+- **Pornește / Oprește** stă între cele două cercuri de jos. Atingerea mijlocului pune pauză sau continuă.
+- **În mijloc**: previzualizarea opțiunii alese; cât masa desenează, desenul real se construiește odată cu bila, iar progresul apare pe ramă.
+- **Desenează**: Editor desen și curățarea nisipului (din centru, de la margine, lateral).
+- **Control**: Home, bila în centru, bila la margine, Control complet. **Viteză**: valori de la 50 la 500 mm/s.
+- Meniurile cu multe setări (Lumini, Audio, Rutine, Setări, Editor desen) nu schimbă pagina imediat: numele apare în mijloc, care luminează de două ori, apoi pagina se deschide cu o tranziție. Butonul **Cadran** (stânga jos) te aduce înapoi.
 
 ## Homing cu senzor magnetic și Calibrare
 **Cablaj:** modulul Hall (3144E + LM393) la Raspberry Pi: **VCC → pin 1 (3.3V)**, **GND → pin 9**, **DO → pin 11 (GPIO17)**. AO rămâne nelegat. Nu alimenta modulul la 5V, pentru că ieșirea ar trimite 5V în Pi. Senzorul dă LOW când magnetul e în dreptul lui; verificare din terminal: `pinctrl get 17`.
